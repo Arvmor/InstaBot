@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from signal import signal, SIGINT
 from time import sleep
 from os import system
-import credentials
+from credentials import account
 # functions
 
 
@@ -13,9 +13,16 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
     exit(0)
 
 
-def login(username, password):
+def login(accountNumber):  # Login function
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[2]/div/label/input').send_keys(username)
+        By.XPATH, '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[2]/div/label/input').send_keys(account[accountNumber][0])
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[3]/div/label/input').send_keys(account[accountNumber][1])
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/article/div/div[1]/div/form/div[4]/button'
+    ).click()
 
 
 # Driver settings
