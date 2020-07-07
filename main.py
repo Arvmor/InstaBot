@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -13,6 +14,15 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
     print("Closing the script")
     driver.quit()
     exit(0)
+
+
+def load(filename):
+    f = open(f"./webPanel/{filename}.txt", "r")
+    cPlace = ''
+    for l in f:
+        cPlace += l
+    f.close()
+    return cPlace
 
 
 def login(numberOfAccount):  # Login function
@@ -60,7 +70,7 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
+chrome_options.add_argument("user-data-dir=~/.config/chromium/")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
@@ -70,7 +80,7 @@ sleep(15)
 try:
     numberOfAccount = int(input("Which Account: "))
     login(numberOfAccount)
-    commentText = input("What Comment: ")
+    commentText = load("commentText")
     postURL = input("Which Post: ")
     sendComment(commentText, postURL)
     sendLike(postURL)
