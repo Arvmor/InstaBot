@@ -17,12 +17,12 @@
         </form>
         <form action="./writePostURL.php" method="post">
                 <span class="contact100-form-title">Target Post</span>
-                <pre><textarea class="input100" name="posturl" placeholder="Text"></textarea></pre>
+                <pre><textarea class="input100" name="posturl" placeholder="Ex. https://www.instagram.com/p/ABCDEFGHIJHK/"></textarea></pre>
                 <input type="submit" id="a" name="submit" value="Submit">
     </form>
         <form action="./writeComment.php" method="post">
                 <span class="contact100-form-title">Send Comment</span>
-                <pre><textarea class="input100" name="comment" placeholder="Text"></textarea></pre>
+                <pre><textarea class="input100" name="comment" placeholder="Ex. Great Post 👍"></textarea></pre>
                 <input type="submit" id="a" name="submit" value="Submit">
                 <script src="./btnClick.js"></script>
             </div>
