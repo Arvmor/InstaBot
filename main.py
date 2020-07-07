@@ -11,7 +11,7 @@ from credentials import account
 def signal_handler(signal, frame):  # Handle Ctrl-C
     # system("sudo service apache2 stop")
     print("Closing the script")
-    driver.close()
+    driver.quit()
     exit(0)
 
 
@@ -64,4 +64,4 @@ login(1)
 sendComment(
     "Post Zibayi bood !", 'https://www.instagram.com/p/CBELcX9F361/')
 sendLike('https://www.instagram.com/p/CBELcX9F361/')
-driver.close()
+driver.quit()
