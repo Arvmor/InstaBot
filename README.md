@@ -9,7 +9,7 @@ The WebPanel for **Managing** (Apache2 Service)
 - Like Posts
 <br>
 Sample ScreenShot:
-<img src="imgs/web.jpeg" width="200" height="200"/>
+<img src="imgs/web.jpeg" width="1280" height="720"/>
 
 # Disclaimer
 The **AUTHOR** is not responsible for any misuse and misbehaviour of the contained DATA. So the Auther is NOT RESPONSIBLE !
