@@ -60,20 +60,21 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument(
-    "user-data-dir=/home/r00t/.config/chromium/")
+chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
 sleep(15)
 
 # Main code
-# try:
-login(1)
-sendComment(
-    "Post Zibayi bood !", 'https://www.instagram.com/p/CBELcX9F361/')
-# sendLike('https://www.instagram.com/p/CBELcX9F361/')
-driver.quit()
-# except:
-#     print("Crashed !")
-#     driver.quit()
+try:
+    numberOfAccount = int(input("Which Account: "))
+    login(numberOfAccount)
+    commentText = input("What Comment: ")
+    postURL = input("Which Post: ")
+    sendComment(commentText, postURL)
+    sendLike(postURL)
+    driver.quit()
+except:
+    print("Crashed !")
+    driver.quit()
