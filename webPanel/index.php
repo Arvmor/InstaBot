@@ -9,13 +9,13 @@
 </head>
 
 <body>
-    <form action="write.php" method="post">
-        <div class="container-contact100">
-            <div class="wrap-contact100">
-                <a href="#" onclick="window.location.reload();">Clear</a>
-                <form action="runTheBot.php" method="post">
-                    <input type="submit" id="a" value="Run" name="btn">
-                </form>
+<div class="container-contact100">
+    <div class="wrap-contact100">
+        <a href="#" onclick="window.location.reload();">Clear</a>
+        <form action="runTheBot.php" method="post">
+            <input type="submit" id="a" value="Run" name="btn">
+        </form>
+        <form action="write.php" method="post">
                 <span class="contact100-form-title">Send Comment</span>
                 <pre><textarea class="input100" name="comment" placeholder="Text"></textarea></pre>
                 <input type="submit" id="a" name="submit" value="Submit">
