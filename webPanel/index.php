@@ -15,7 +15,12 @@
         <form action="./../runTheBot.php" method="post">
             <input type="submit" id="a" value="Run" name="btn">
         </form>
-        <form action="./write.php" method="post">
+        <form action="./writePostURL.php" method="post">
+                <span class="contact100-form-title">Target Post</span>
+                <pre><textarea class="input100" name="posturl" placeholder="Text"></textarea></pre>
+                <input type="submit" id="a" name="submit" value="Submit">
+    </form>
+        <form action="./writeComment.php" method="post">
                 <span class="contact100-form-title">Send Comment</span>
                 <pre><textarea class="input100" name="comment" placeholder="Text"></textarea></pre>
                 <input type="submit" id="a" name="submit" value="Submit">

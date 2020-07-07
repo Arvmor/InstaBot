@@ -81,7 +81,7 @@ try:
     numberOfAccount = int(input("Which Account: "))
     login(numberOfAccount)
     commentText = load("commentText")
-    postURL = input("Which Post: ")
+    postURL = load("postURLText")
     sendComment(commentText, postURL)
     sendLike(postURL)
     driver.quit()
