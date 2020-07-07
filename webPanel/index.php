@@ -12,9 +12,10 @@
     <form action="write.php" method="post">
         <div class="container-contact100">
             <div class="wrap-contact100">
+                <a href="#" onclick="window.location.reload();">Clear</a>
                 <span class="contact100-form-title">Send Comment</span>
                 <pre><textarea class="input100" name="comment" placeholder="Text"></textarea></pre>
-                <input href="#" type="submit" id="a" name="submit" value="Submit">
+                <input type="submit" id="a" name="submit" value="Submit">
                 <script src="./btnClick.js"></script>
             </div>
         </div>
