@@ -8,7 +8,6 @@
     box-sizing: border-box;
     font-family: 'Bardon', sans-serif;
   }
-  
   body, html {
     height: 100%;
     background-image: url("./bg.jpg");
@@ -18,57 +17,17 @@
     background-size: cover;
     background-color: #503681;
   }
-  
   input {
       outline: none;
       border: none;
   }
-  
-  input[type="number"] {
-      -moz-appearance: textfield;
-      appearance: none;
-      -webkit-appearance: none;
-  }
-  
-  input[type="number"]::-webkit-outer-spin-button,
-  input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-  }
-  
   textarea {
     outline: none;
     border: none;
   }
-  
   textarea:focus, input:focus {
     border-color: transparent !important;
   }
-  
-  input::-webkit-input-placeholder { color: #bdbdd3;}
-  input:-moz-placeholder { color: #bdbdd3;}
-  input::-moz-placeholder { color: #bdbdd3;}
-  input:-ms-input-placeholder { color: #bdbdd3;}
-  
-  textarea::-webkit-input-placeholder { color: #bdbdd3;}
-  textarea:-moz-placeholder { color: #bdbdd3;}
-  textarea::-moz-placeholder { color: #bdbdd3;}
-  textarea:-ms-input-placeholder { color: #bdbdd3;}
-  
-  /*---------------------------------------------*/
-  iframe {
-      border: none !important;
-  }
-  /*---------------------------------------------*/
-  .container {
-      max-width: 1200px;
-  }
-  
-  
-  
-  
-  /*//////////////////////////////////////////////////////////////////
-  [ Contact ]*/
-  
   .container-contact100 {
     width: 100%;  
     min-height: 100vh;
@@ -83,24 +42,16 @@
     padding: 15px;
     position: relative;
   }
-  
   .wrap-contact100 {
     width: 550px;
     background: transparent;
     padding: 50px 0px 160px 0px;
   }
-  
-  
-  /*==================================================================
-  [ Form ]*/
-  
   .contact100-form {
     width: 100%;
   }
-  
   .contact100-form-title {
     display: block;
-    /* font-family: Ubuntu-Bold; */
     font-size: 30px;
     color: #d6d6d6;
     line-height: 1.2;
@@ -109,10 +60,6 @@
     padding-bottom: 20px;
     padding-top: 20px;
   }
-  
-  /*------------------------------------------------------------------
-  [ Input ]*/
-  
   .wrap-input100 {
     width: 100%;
     border-radius: 31px;
@@ -120,19 +67,16 @@
     position: relative;
     z-index: 1;
   }
-  
   .input100 {
     position: relative;
     display: block;
     width: 100%;
     background: #fff;
     border-radius: 31px;
-    /* font-family: Ubuntu-Bold; */
     font-size: 18px;
     color: #25385c;
     line-height: 1.2;
   }
-  /* Button CSS */
   a, #a
   {
       display: -webkit-box;
@@ -155,41 +99,14 @@
       overflow: hidden;
       background: linear-gradient(90deg,#1868bd,#5d09e4);
   }
-  span:last-child
-  {
-      position: absolute;
-      background: #fff;
-      transform: translate(-50%,-50%);
-      pointer-events: none;
-      border-radius: 50%;
-      animation: animate 1s linear infinite;
-  }
-  @keyframes animate
-  {
-      0%
-      {
-          width: 0px;
-          height: 0px;
-          opacity: 0.5;
-      }
-      100%
-      {
-          width: 500px;
-          height: 500px;
-          opacity: 0;
-      }
-  }
-  /* Button CSS */
   input.input100 {
     height: 62px;
     padding: 0 35px 0 35px;
   }
-  
   textarea.input100 {
     min-height: 169px;
     padding: 19px 35px 0 35px;
   }
-  
   @media (max-width: 992px) {
     .alert-validate::before {
       visibility: visible;
