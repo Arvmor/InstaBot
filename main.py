@@ -54,8 +54,9 @@ def sendComment(commentText, postURL):  # Send Comments
     sleep(5)
 
 
-def sendLike(postURL):  # Like the post
-    driver.get(postURL)
+def sendLike(postURL=None, samePost=False):  # Like the post
+    if samePost == False:
+        driver.get(postURL)
     sleep(3)
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[1]/span[1]/button').click()
@@ -74,7 +75,7 @@ chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
-sleep(15)
+sleep(5)
 
 # Main code
 try:
@@ -83,7 +84,7 @@ try:
     commentText = load("commentText")
     postURL = load("postURLText")
     sendComment(commentText, postURL)
-    sendLike(postURL)
+    sendLike(samePost=True)
     driver.quit()
 except:
     print("Crashed !")
