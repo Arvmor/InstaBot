@@ -15,7 +15,10 @@
         <form action="./../runTheBot.php" method="post">
             <input type="submit" id="a" value="Run" name="btn">
             <span class="contact100-form-title">Status</span>
-                <pre><textarea class="input100" name="" disabled><?php include('./../userInputs/status.txt'); ?></textarea></pre>
+                <pre><textarea class="input100" name="" disabled>Current Status: <?php include('./../userInputs/status.txt'); ?>                
+Account: <?php include('./../userInputs/accountNumber.txt'); ?>                
+comment Text: <?php include('./../userInputs/commentText.txt'); ?>                
+Post URL: <?php include('./../userInputs/postURLText.txt'); ?></textarea></pre>
         </form>
         <form action="./writeAccountNumber.php" method="post">
                 <span class="contact100-form-title">Account Number</span>
