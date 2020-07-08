@@ -14,10 +14,12 @@
         <a href="#" onclick="window.location.reload();">Clear</a>
         <form action="./../runTheBot.php" method="post">
             <input type="submit" id="a" value="Run" name="btn">
+            <span class="contact100-form-title">Status</span>
+                <pre><textarea class="input100" name="" disabled><?php include('./../userInputs/status.txt'); ?></textarea></pre>
         </form>
         <form action="./writeAccountNumber.php" method="post">
                 <span class="contact100-form-title">Account Number</span>
-                <pre><textarea class="input100" name="accountNumber" placeholder="Ex. 1" style="margin: 0px 405px 0px 0px; width: 146px; height: 169px;"></textarea></pre>
+                <pre><textarea class="input100" name="accountNumber" placeholder="Ex. 1"></textarea></pre>
                 <input type="submit" id="a" name="submit" value="Submit">
         </form>
         <form action="./writePostURL.php" method="post">

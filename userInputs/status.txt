@@ -1,0 +1,13 @@
+LICENSE
+README.md
+__pycache__
+chromedriver.exe
+credentials.py
+imgs
+main.py
+requirements.txt
+runTheBot.php
+test.py
+userInputs
+webPanel
+~
