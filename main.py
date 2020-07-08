@@ -64,7 +64,24 @@ def sendLike(postURL=None, samePost=False):  # Like the post
     sleep(3)
 
 
-# Driver settings
+def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"):
+    if samePost == False:
+        driver.get(postURL)
+    sleep(3)
+    driver.find_element(
+        By.XPATH, f'//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').location_once_scrolled_into_view()
+    driver.find_element(
+        By.XPATH, f'//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').send_keys(commentText)
+    sleep(3)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
+    print(f"Replayed to this post {postURL}")
+    sleep(3)
+
+    # Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
@@ -84,7 +101,9 @@ try:
     commentText = load("commentText")
     postURL = load("postURLText")
     sendComment(commentText, postURL)
-    sendLike(samePost=True)
+    sendLike(postURL=postURL, samePost=True)
+    sendReplay(postURL=postURL, samePost=True,
+               commentNumber=2, commentText="salam")
     driver.quit()
 except:
     print("Crashed !")
