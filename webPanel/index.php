@@ -15,6 +15,11 @@
         <form action="./../runTheBot.php" method="post">
             <input type="submit" id="a" value="Run" name="btn">
         </form>
+        <form action="./writeAccountNumber.php" method="post">
+                <span class="contact100-form-title">Account Number</span>
+                <pre><textarea class="input100" name="accountNumber" placeholder="Ex. 1" style="margin: 0px 405px 0px 0px; width: 146px; height: 169px;"></textarea></pre>
+                <input type="submit" id="a" name="submit" value="Submit">
+    </form>
         <form action="./writePostURL.php" method="post">
                 <span class="contact100-form-title">Target Post</span>
                 <pre><textarea class="input100" name="posturl" placeholder="Ex. https://www.instagram.com/p/ABCDEFGHIJHK/"></textarea></pre>

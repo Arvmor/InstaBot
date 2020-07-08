@@ -17,7 +17,7 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
 
 
 def load(filename):
-    f = open(f"./webPanel/{filename}.txt", "r")
+    f = open(f"./userInputs/{filename}.txt", "r")
     cPlace = ''
     for l in f:
         cPlace += l
@@ -41,7 +41,7 @@ def login(numberOfAccount):  # Login function
 
 def sendComment(commentText, postURL):  # Send Comments
     driver.get(postURL)
-    sleep(10)
+    sleep(3)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').click()
     sleep(1)
@@ -51,26 +51,26 @@ def sendComment(commentText, postURL):  # Send Comments
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
     print(f"Commented {commentText} on this post {postURL}")
-    sleep(10)
+    sleep(5)
 
 
 def sendLike(postURL):  # Like the post
     driver.get(postURL)
-    sleep(10)
+    sleep(3)
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[1]/span[1]/button').click()
     print(f"liked this post {postURL}")
-    sleep(10)
+    sleep(3)
 
 
 # Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("user-data-dir=~/.config/chromium/")
+chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
@@ -78,7 +78,7 @@ sleep(15)
 
 # Main code
 try:
-    numberOfAccount = int(input("Which Account: "))
+    numberOfAccount = int(load("accountNumber"))
     login(numberOfAccount)
     commentText = load("commentText")
     postURL = load("postURLText")
