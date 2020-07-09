@@ -61,7 +61,7 @@ def sendLike(postURL=None, samePost=False):  # Like the post
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[1]/span[1]/button').click()
     print(f"liked this post {postURL}")
-    sleep(3)
+    sleep(5)
 
 
 def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"):
@@ -79,9 +79,29 @@ def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
     print(f"Replayed to this post {postURL}")
-    sleep(3)
+    sleep(5)
 
-    # Driver settings
+
+def follow(username):
+    driver.get(f"https://www.instagram.com/{username}/")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button').click()
+    sleep(5)
+
+
+def unfollow(username):
+    driver.get(f"https://www.instagram.com/{username}/")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[1]/div[2]/span/span[1]/button').click()
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[1]').click()
+    sleep(5)
+
+
+# Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
@@ -97,13 +117,14 @@ sleep(5)
 # Main code
 try:
     numberOfAccount = int(load("accountNumber"))
-    login(numberOfAccount)
     commentText = load("commentText")
     postURL = load("postURLText")
-    sendComment(commentText, postURL)
-    sendLike(postURL=postURL, samePost=True)
-    sendReplay(postURL=postURL, samePost=True,
-               commentNumber=2, commentText="salam")
+    login(numberOfAccount)
+    # sendComment(commentText, postURL)
+    # sendLike(postURL=postURL, samePost=True)
+    # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
+    # follow("9gag")
+    # unfollow("instagram")
     driver.quit()
 except:
     print("Crashed !")
