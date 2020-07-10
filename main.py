@@ -82,6 +82,26 @@ def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"
     sleep(5)
 
 
+def forwardPost(postURL=None, samePost=False, username=None):
+    if samePost == False:
+        driver.get(postURL)
+    sleep(3)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/section[1]/button').click()
+    sleep(3)
+    driver.find_element(
+        By.XPATH, '/html/body/div[4]/div/div/div/div[2]/div/div[1]/div/div/div[2]').click()
+    sleep(3)
+    driver.find_element(
+        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[1]/div/div[2]/input').send_keys(username)
+    sleep(3)
+    driver.find_element(
+        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[2]/div[1]/div').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '/html/body/div[5]/div/div/div[1]/div/div[2]/div/button').click()
+
+
 def follow(username):
     driver.get(f"https://www.instagram.com/{username}/")
     sleep(5)
@@ -123,6 +143,7 @@ try:
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
+    # forwardPost(postURL=postURL, samePost=True, username="9gag")
     # follow("9gag")
     # unfollow("instagram")
     driver.quit()
