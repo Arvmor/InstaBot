@@ -27,13 +27,13 @@ def load(filename):
 
 def login(numberOfAccount):  # Login function
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div[2]/div[1]/div/form/div[2]/div/label/input').send_keys(account[numberOfAccount][0])
+        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[2]/div/label/input').send_keys(account[numberOfAccount][0])
     sleep(2)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div[2]/div[1]/div/form/div[3]/div/label/input').send_keys(account[numberOfAccount][1])
+        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[3]/div/label/input').send_keys(account[numberOfAccount][1])
     sleep(2)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div[2]/div[1]/div/form/div[4]/button'
+        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button'
     ).click()
     sleep(5)
     print(f"Loged in with {account[numberOfAccount][0]}")
@@ -41,25 +41,25 @@ def login(numberOfAccount):  # Login function
 
 def sendComment(commentText, postURL):  # Send Comments
     driver.get(postURL)
-    sleep(3)
+    sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').click()
     sleep(1)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').send_keys(commentText)
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').send_keys(commentText)
     sleep(3)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/button').click()
     print(f"Commented {commentText} on this post {postURL}")
-    sleep(5)
+    sleep(10)
 
 
 def sendLike(postURL=None, samePost=False):  # Like the post
     if samePost == False:
         driver.get(postURL)
-    sleep(3)
+    sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[1]/span[1]/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/span[1]/button').click()
     print(f"liked this post {postURL}")
     sleep(5)
 
@@ -69,15 +69,15 @@ def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"
         driver.get(postURL)
     sleep(3)
     driver.find_element(
-        By.XPATH, f'//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').location_once_scrolled_into_view()
+        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').location_once_scrolled_into_view()
     driver.find_element(
-        By.XPATH, f'//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').click()
+        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').click()
     sleep(1)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').send_keys(commentText)
     sleep(3)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
     print(f"Replayed to this post {postURL}")
     sleep(5)
 
@@ -87,7 +87,7 @@ def forwardPost(postURL=None, samePost=False, username=None):
         driver.get(postURL)
     sleep(3)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/div[1]/article/div[3]/section[1]/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/button').click()
     sleep(3)
     driver.find_element(
         By.XPATH, '/html/body/div[4]/div/div/div/div[2]/div/div[1]/div/div/div[2]').click()
@@ -106,7 +106,7 @@ def follow(username):
     driver.get(f"https://www.instagram.com/{username}/")
     sleep(5)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button').click()
     sleep(5)
 
 
@@ -114,7 +114,7 @@ def unfollow(username):
     driver.get(f"https://www.instagram.com/{username}/")
     sleep(5)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/div[1]/div[2]/span/span[1]/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/header/section/div[1]/div[2]/span/span[1]/button').click()
     sleep(2)
     driver.find_element(
         By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[1]').click()
@@ -128,7 +128,7 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
+# chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
@@ -140,8 +140,8 @@ try:
     commentText = load("commentText")
     postURL = load("postURLText")
     login(numberOfAccount)
-    # sendComment(commentText, postURL)
-    # sendLike(postURL=postURL, samePost=True)
+    sendComment(commentText, postURL)
+    sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
     # forwardPost(postURL=postURL, samePost=True, username="9gag")
     # follow("9gag")
