@@ -2,7 +2,10 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from PIL import Image, ImageDraw, ImageFont
 from signal import signal, SIGINT
+from arabic_reshaper import reshape
+from bidi.algorithm import get_display
 from time import sleep
 from os import system
 from credentials import account
@@ -121,6 +124,16 @@ def unfollow(username):
     sleep(5)
 
 
+def CreateImage(text=None, accountID=None):
+    image = Image.open(
+        "/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/bg.jpg")
+    draw = ImageDraw.Draw(image)
+    draw.text((640, 360), get_display(reshape(text)), (255, 255, 255),
+              font=ImageFont.truetype("/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/Yekan.ttf", 18))
+    draw = ImageDraw.Draw(image)
+    image.save(f"/tmp/{accountID}PostPicture.png")
+
+
 # Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
@@ -128,20 +141,22 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
-# chrome_options.add_argument("user-data-dir=/home/r00t/.config/chromium/")
+chrome_options.add_argument(
+    "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
 driver.get("https://www.instagram.com/accounts/logout")
 sleep(5)
+signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Main code
 try:
     numberOfAccount = int(load("accountNumber"))
     commentText = load("commentText")
     postURL = load("postURLText")
-    login(numberOfAccount)
-    sendComment(commentText, postURL)
-    sendLike(postURL=postURL, samePost=True)
+    # login(numberOfAccount)
+    # sendComment(commentText, postURL)
+    # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
     # forwardPost(postURL=postURL, samePost=True, username="9gag")
     # follow("9gag")
