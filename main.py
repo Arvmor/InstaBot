@@ -137,12 +137,11 @@ def unfollow(username):
 def CreateImage(text):
     if text == None:
         return "crash"
-    text = text.encode('utf-8')
     image = Image.open(
         "./webPanel/bg.jpg")
     draw = ImageDraw.Draw(image)
-    w, h = draw.textsize(text)
-    draw.text(((640-w)/2, (360-h)/2), get_display(reshape(text)), (255, 255, 255),
+    w, h = draw.textsize(text.encode('utf-8'))
+    draw.text(((1280-w)/2, (720-h)/2), get_display(reshape(text)), (255, 255, 255),
               font=ImageFont.truetype("./webPanel/Yekan.ttf", 30))
     draw = ImageDraw.Draw(image)
     image.save(f"/tmp/{argv[1]}InstaImage.png")
