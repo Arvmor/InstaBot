@@ -144,15 +144,16 @@ def pickPost(channel, pattern=None):
     # it will pick a random post from telegram channel which in here is our Post source
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
-    driver.get(f"https://t.me/{channel}")
+    driver.get(f"https://t.me/s/{channel}")
     # Find last post id
     postHref = driver.find_element(
         By.XPATH, '/html/body/main/div/section/div[20]/div[1]/div[2]/div[3]/div/span[3]/a').get_attribute("href")
-    postID = ''
-    for l in range(len(postHref)):
+    postID = 0
+    for l in range(1, len(postHref)):
         if postHref[-l] != '/':
-            postID += postHref[-l]
+            postID -= 1
         else:
+            postID = postHref[postID:]
             break
     # Find Text Caption or Image
     driver.get(f"https://t.me/{channel}/{postID}")
