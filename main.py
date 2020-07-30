@@ -34,10 +34,10 @@ def login(numberOfAccount):  # Login function
     driver.get('https://www.instagram.com/accounts/login/')
     sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[2]/div/label/input').send_keys(account[numberOfAccount][0])
+        By.NAME, 'username').send_keys(account[numberOfAccount][0])
     sleep(2)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[3]/div/label/input').send_keys(account[numberOfAccount][1])
+        By.NAME, 'password').send_keys(account[numberOfAccount][1])
     sleep(2)
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[5]/button'
@@ -200,7 +200,7 @@ def sendPost(caption=None):
 # Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
@@ -216,8 +216,8 @@ try:
     # commentText = load("commentText")
     # postURL = load("postURLText")
     login(int(argv[1]))
-    checkForCrashed = CreateImage(pickPost('sigarism'))
-    sendPost()
+    # checkForCrashed = CreateImage(pickPost('sigarism'))
+    # sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
