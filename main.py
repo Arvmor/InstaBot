@@ -40,7 +40,7 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(account[numberOfAccount][1])
     sleep(2)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
+        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[5]/button'
     ).click()
     sleep(5)
     print(f"Logged in with {account[numberOfAccount][0]}")
@@ -185,18 +185,21 @@ def pickPost(channel, pattern=None):
 def sendPost(caption=None):
     if checkForCrashed == "crash":
         return
-    driver.get(f"https://www.instagram.com/{account[argv[1]][0]}")
-    sleep(5)
-    driver.find_element(By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').send_keys(
-        f'/tmp/{argv[1]}InstaImage.png')
+    driver.get(f"https://www.instagram.com/{account[int(argv[1])][0]}")
     sleep(5)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaImage.png')
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/div[2]/section[1]/div[1]/textarea').send_keys(caption)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
