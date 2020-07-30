@@ -132,10 +132,10 @@ def CreateImage(text):
     if text == None:
         return "crash"
     image = Image.open(
-        "/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/bg.jpg")
+        "./webPanel/bg.jpg")
     draw = ImageDraw.Draw(image)
     draw.text((640, 360), get_display(reshape(text)), (255, 255, 255),
-              font=ImageFont.truetype("/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/Yekan.ttf", 18))
+              font=ImageFont.truetype("./webPanel/Yekan.ttf", 18))
     draw = ImageDraw.Draw(image)
     image.save(f"/tmp/{argv[1]}InstaImage.png")
 
@@ -185,6 +185,8 @@ def pickPost(channel, pattern=None):
 def sendPost(caption=None):
     if checkForCrashed == "crash":
         return
+    driver.get(f"https://www.instagram.com/{account[argv[1]][0]}")
+    sleep(5)
     driver.find_element(By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').send_keys(
         f'/tmp/{argv[1]}InstaImage.png')
     sleep(5)
@@ -196,6 +198,7 @@ def sendPost(caption=None):
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
+    system(f'rm /tmp/{argv[1]}InstaImage.png')
 
 
 # Driver settings
