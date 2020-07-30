@@ -8,7 +8,7 @@ from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from time import sleep
 from os import system
-from credentials import account
+from credentials import account, channels, followSource
 from random import choice
 from sys import argv
 # functions
@@ -137,16 +137,22 @@ def unfollow(username):
 def CreateImage(text):
     if text == None:
         return "crash"
+    text = text.encode('utf-8')
     image = Image.open(
         "./webPanel/bg.jpg")
     draw = ImageDraw.Draw(image)
-    draw.text((640, 360), get_display(reshape(text)), (255, 255, 255),
-              font=ImageFont.truetype("./webPanel/Yekan.ttf", 18))
+    w, h = draw.textsize(text)
+    draw.text(((640-w)/2, (360-h)/2), get_display(reshape(text)), (255, 255, 255),
+              font=ImageFont.truetype("./webPanel/Yekan.ttf", 30))
     draw = ImageDraw.Draw(image)
     image.save(f"/tmp/{argv[1]}InstaImage.png")
 
 
-def pickPost(channel, pattern=None):
+def pickPost():
+    # select random Channel
+    chosen = choice(channels[account[int(argv[1])][2]])
+    channel = chosen[0]
+    pattern = chosen[1]
     # it will pick a random post from telegram channel which in here is our Post source
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
@@ -161,7 +167,7 @@ def pickPost(channel, pattern=None):
         else:
             postID = postHref[postID:]
             break
-    # Find Text Caption or Image
+    # Find Text Caption
     driver.get(f"https://t.me/{channel}/{postID}")
     sleep(10)
     try:
@@ -185,10 +191,15 @@ def pickPost(channel, pattern=None):
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
                 return
         except:
-            return postText
+            if pattern == 0:
+                for l in range(1, len(postText)):
+                    if postText[-l] == '\n':
+                        l -= 1
+                        break
+            return postText[:-l]
 
 
-def sendPost(caption=None):
+def sendPost(caption="Donate :)"):
     if checkForCrashed == "crash":
         return
     driver.get(f"https://www.instagram.com/{account[int(argv[1])][0]}")
@@ -229,7 +240,7 @@ try:
     # commentText = load("commentText")
     # postURL = load("postURLText")
     login(int(argv[1]))
-    checkForCrashed = CreateImage(pickPost('sigarism'))
+    checkForCrashed = CreateImage(pickPost())
     sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
