@@ -40,7 +40,7 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(account[numberOfAccount][1])
     sleep(2)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[5]/button'
+        By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
     ).click()
     sleep(5)
     print(f"Logged in with {account[numberOfAccount][0]}")
@@ -216,8 +216,8 @@ try:
     # commentText = load("commentText")
     # postURL = load("postURLText")
     login(int(argv[1]))
-    # checkForCrashed = CreateImage(pickPost('sigarism'))
-    # sendPost()
+    checkForCrashed = CreateImage(pickPost('sigarism'))
+    sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
