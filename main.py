@@ -142,7 +142,7 @@ def CreateImage(text):
     draw = ImageDraw.Draw(image)
     w, h = draw.textsize(text.encode('utf-8'))
     draw.text(((1280-w)/2, (720-h)/2), get_display(reshape(text)), (255, 255, 255),
-              font=ImageFont.truetype("./webPanel/Yekan.ttf", 30))
+              font=ImageFont.truetype("./webPanel/AbdoMaster-Bold.otf", 25))
     draw = ImageDraw.Draw(image)
     image.save(f"/tmp/{argv[1]}InstaImage.png")
 
