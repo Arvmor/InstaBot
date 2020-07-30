@@ -9,6 +9,8 @@ from bidi.algorithm import get_display
 from time import sleep
 from os import system
 from credentials import account
+from random import choice
+from sys import argv
 # functions
 
 
@@ -29,17 +31,19 @@ def load(filename):
 
 
 def login(numberOfAccount):  # Login function
+    driver.get('https://www.instagram.com/accounts/login/')
+    sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[2]/div/label/input').send_keys(account[numberOfAccount][0])
+        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[2]/div/label/input').send_keys(account[numberOfAccount][0])
     sleep(2)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[3]/div/label/input').send_keys(account[numberOfAccount][1])
+        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[3]/div/label/input').send_keys(account[numberOfAccount][1])
     sleep(2)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/article/div[2]/div[1]/div/form/div[4]/button'
+        By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[5]/button'
     ).click()
     sleep(5)
-    print(f"Loged in with {account[numberOfAccount][0]}")
+    print(f"Logged in with {account[numberOfAccount][0]}")
 
 
 def sendComment(commentText, postURL):  # Send Comments
@@ -124,20 +128,79 @@ def unfollow(username):
     sleep(5)
 
 
-def CreateImage(text=None, accountID=None):
+def CreateImage(text):
+    if text == None:
+        return "crash"
     image = Image.open(
         "/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/bg.jpg")
     draw = ImageDraw.Draw(image)
     draw.text((640, 360), get_display(reshape(text)), (255, 255, 255),
               font=ImageFont.truetype("/home/r00t/Desktop/Coding/GitHub/InstaBot/webPanel/Yekan.ttf", 18))
     draw = ImageDraw.Draw(image)
-    image.save(f"/tmp/{accountID}PostPicture.png")
+    image.save(f"/tmp/{argv[1]}InstaImage.png")
+
+
+def pickPost(channel, pattern=None):
+    # it will pick a random post from telegram channel which in here is our Post source
+    driver.execute_script("window.open('');")
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get(f"https://t.me/{channel}")
+    # Find last post id
+    postHref = driver.find_element(
+        By.XPATH, '/html/body/main/div/section/div[20]/div[1]/div[2]/div[3]/div/span[3]/a').get_attribute("href")
+    postID = ''
+    for l in range(len(postHref)):
+        if postHref[-l] != '/':
+            postID += postHref[-l]
+        else:
+            break
+    # Find Text Caption or Image
+    driver.get(f"https://t.me/{channel}/{postID}")
+    sleep(10)
+    try:
+        driver.switch_to.frame(
+            driver.find_element(
+                By.XPATH,
+                "/html/body/div[1]/div[2]/div[1]/iframe",
+            )
+        )
+    except:
+        return
+    postText = driver.find_element(
+        By.XPATH, '/html/body/div/div[2]/div[2]').text.strip()
+    try:
+        if driver.find_element(
+                By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
+            return
+    except:
+        try:
+            if driver.find_element(
+                    By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
+                return
+        except:
+            return postText
+
+
+def sendPost(caption=None):
+    if checkForCrashed == "crash":
+        return
+    driver.find_element(By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').send_keys(
+        f'/tmp/{argv[1]}InstaImage.png')
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/div[2]/section[1]/div[1]/textarea').send_keys(caption)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+    sleep(60)
 
 
 # Driver settings
 chromedriver = "chromedriver.exe"
 chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
@@ -145,16 +208,16 @@ chrome_options.add_argument(
     "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
 chrome_options.add_argument("--log-level=OFF")
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
-driver.get("https://www.instagram.com/accounts/logout")
-sleep(5)
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Main code
 try:
-    numberOfAccount = int(load("accountNumber"))
-    commentText = load("commentText")
-    postURL = load("postURLText")
-    # login(numberOfAccount)
+    # numberOfAccount = int(load("accountNumber"))
+    # commentText = load("commentText")
+    # postURL = load("postURLText")
+    login(int(argv[1]))
+    checkForCrashed = CreateImage(pickPost('sigarism'))
+    sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
@@ -162,6 +225,6 @@ try:
     # follow("9gag")
     # unfollow("instagram")
     driver.quit()
-except:
-    print("Crashed !")
+except Exception as excep:
+    print(excep)
     driver.quit()
