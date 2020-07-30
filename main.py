@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -137,13 +138,22 @@ def unfollow(username):
 def CreateImage(text):
     if text == None:
         return "crash"
-    image = Image.open(
-        "./webPanel/bg.jpg")
+    # image = Image.open("./webPanel/download.jpeg")
+    W, H = (640, 640)
+    text = text.encode('utf-8').strip()
+    image = Image.new("RGBA", (W, H), "white")
     draw = ImageDraw.Draw(image)
-    w, h = draw.textsize(text.encode('utf-8'))
-    draw.text(((1280-w)/2, (720-h)/2), get_display(reshape(text)), (255, 255, 255),
-              font=ImageFont.truetype("./webPanel/AbdoMaster-Bold.otf", 25))
-    draw = ImageDraw.Draw(image)
+    w, h = draw.textsize(text)
+    fontSize = int(590/(0.065*w))
+    font = ImageFont.truetype("./webPanel/Koloche.otf",
+                              fontSize)
+    w, h = draw.textsize(text.decode('utf-8'), font=font)
+    print(w, h)
+    x = 650-w
+    y = ((320)-(h/2))*1
+    print(x, y)
+    draw.text((x, y), get_display(reshape(text.decode('utf-8'))), fill="black",
+              font=font, align='center')
     image.save(f"/tmp/{argv[1]}InstaImage.png")
 
 
