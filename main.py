@@ -144,40 +144,79 @@ def unfollow(username):
     sleep(5)
 
 
-def CreateImage(text):
+def CreateImage(text, background, color=None):
     if text == None:
         return "crash"
-    html = """<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <style>
-                            @font-face {
-                                font-family: "myfont";
-                                src: url("./webPanel/Tanha.ttf");
-                            }
-                            body {
-                                overflow-y: hidden;
-                                overflow-x: hidden;
+    if account[int(argv[1])][3] == 1:
+        html = """<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <style>
+                                @font-face {
+                                    font-family: "myfont";
+                                    src: url("./webPanel/Tanha.ttf");
                                 }
-                        </style>
-                </head>
-                <body>"""+f"""
-                <div style="
-                        font-family: myfont;
-                        font-size:4vw;
-                        margin: 0;
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        -ms-transform: translate(-50%, -50%);
-                        transform: translate(-50%, -50%);
-                        text-align: center;
-                        ">
-                        {text}
-                        </div>
-                </body>
-                </html>"""
+                                body {"""+"""
+                                    background-image: url('{background}');
+                                    background-repeat: no-repeat;
+                                    overflow-y: hidden;
+                                    overflow-x: hidden;
+                                    }
+                            </style>
+                    </head>
+                    <body>"""+f"""
+                    <div style="
+                            font-family: myfont;
+                            font-size:4vw;
+                            margin: 0;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            -ms-transform: translate(-50%, -50%);
+                            transform: translate(-50%, -50%);
+                            text-align: center;
+                            color: {account[int(argv[1])][4][color]};
+                            ">
+                            {text}
+                            </div>
+                    </body>
+                    </html>"""
+    else:
+        html = """<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                        @font-face {
+                            font-family: "myfont";
+                            src: url("./webPanel/Tanha.ttf");
+                        }
+                        body {"""+"""
+                            background-image: url('{background}');
+                            background-repeat: no-repeat;
+                            overflow-y: hidden;
+                            overflow-x: hidden;
+                            }
+                    </style>
+            </head>
+            <body>"""+f"""
+            <div style="
+                    font-family: myfont;
+                    font-size:4vw;
+                    margin: 0;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    -ms-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+                    text-align: center;
+                    color: {account[int(argv[1])][4][0]};
+                    ">
+                    {text}
+                    </div>
+            </body>
+            </html>"""
     # Create image
     writeFile(html)
     driver.get(f'file:///{getcwd()}/CreateImage.html')
@@ -292,16 +331,32 @@ while True:
         sleep(choice(range(50000, 50800)))
     while True:
         try:
-            checkForCrashed = CreateImage(pickPost())
+            # Create Image (check if background changes)
+            if account[int(argv[1])][3] == 1:
+                whichBGtoUse = open(f"./userInputs/bgUser{argv[1]}.txt", "+r")
+                bgToUse = int(whichBGtoUse.read())
+                whichBGtoUse.close()
+                checkForCrashed = CreateImage(
+                    pickPost(), f'./CreateImage/{argv[1]}-{bgToUse%2}.png', bgToUse % 2)
+                whichBGtoUse = open(f"./userInputs/bgUser{argv[1]}.txt", "+w")
+                whichBGtoUse.write(bgToUse+1)
+                whichBGtoUse.close()
+            else:
+                checkForCrashed = CreateImage(
+                    pickPost(), f'./CreateImage/{argv[1]}.png')
+            # Login
             login(int(argv[1]))
+            # Upload the created image
             sendPost()
+            # Follow few pages
             follow(choice(followSource[account[int(argv[1])][2]]))
+            # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             if runtimehour == TotalRunTime:
                 break
-            # here you can set the delay time
             driver.quit()
+            # here you can set the delay time
             sleep(choice(range(3400, 3800)))
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
