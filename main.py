@@ -17,6 +17,7 @@ from sys import argv
 
 def signal_handler(signal, frame):  # Handle Ctrl-C
     # system("sudo service apache2 stop")
+    system(f'rm /tmp/{argv[1]}InstaImage.png')
     print("Closing the script")
     driver.quit()
     exit(0)
@@ -138,20 +139,33 @@ def unfollow(username):
 def CreateImage(text):
     if text == None:
         return "crash"
+    # Enhance Text
+    spaceCounter = 0
+    enhancedText = ""
+    for i in range(len(text)):
+        if text[i] == " ":
+            spaceCounter += 1
+        if spaceCounter == 5:
+            spaceCounter = 0
+            enhancedText += '\n'
+        else:
+            enhancedText += text[i]
+    text = enhancedText
+    # Create image
     # image = Image.open("./webPanel/download.jpeg")
     W, H = (640, 640)
     text = text.encode('utf-8').strip()
     image = Image.new("RGBA", (W, H), "white")
     draw = ImageDraw.Draw(image)
     w, h = draw.textsize(text)
-    fontSize = int(590/(0.065*w))
-    font = ImageFont.truetype("./webPanel/Koloche.otf",
-                              fontSize)
+    fontSize = int(590/(0.0625*w))
+    font = ImageFont.truetype("./webPanel/Tanha.ttf",
+                              fontSize, encoding="unic")
     w, h = draw.textsize(text.decode('utf-8'), font=font)
-    print(w, h)
-    x = 650-w
-    y = ((320)-(h/2))*1
-    print(x, y)
+    x = ((320)-(w/2))*(320/(w/2))
+    if x < 0:
+        x = ((320)-(w/2))*(-(320/(w/2))*1.5)
+    y = (320)-(h/2)
     draw.text((x, y), get_display(reshape(text.decode('utf-8'))), fill="black",
               font=font, align='center')
     image.save(f"/tmp/{argv[1]}InstaImage.png")
@@ -248,9 +262,11 @@ try:
     # numberOfAccount = int(load("accountNumber"))
     # commentText = load("commentText")
     # postURL = load("postURLText")
-    login(int(argv[1]))
-    checkForCrashed = CreateImage(pickPost())
-    sendPost()
+    # login(int(argv[1]))
+    checkForCrashed = CreateImage(
+        """یسری دکور چوبی mdf خیلی تمیز داشتیم. همونو الان بخوای بسازی با قیمت و دستمزد فکر نکنم کمتر از ۲۵ میلیون بیفته. گذاشتم فروش اینترنتی گفتم شاید به درد یکی خورد و شاید یه دمت گرم هم بما گفت. قیمت گذاشتم ۴ تومن. اونقدر چونه زدن رفتم پاک کردم . گذاشتم واسه چهارشنبه سوری آتیش بزنیم"""
+    )
+    # sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
