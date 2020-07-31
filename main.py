@@ -6,7 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from signal import signal, SIGINT
 from time import sleep
 from os import system, getcwd
-from credentials import account, channels, followSource, captions
+from importlib import reload
+import credentials
 from random import choice
 from sys import argv
 
@@ -41,10 +42,10 @@ def login(numberOfAccount):  # Login function
     driver.get('https://www.instagram.com/accounts/login/')
     sleep(10)
     driver.find_element(
-        By.NAME, 'username').send_keys(account[numberOfAccount][0])
+        By.NAME, 'username').send_keys(credentials.account[numberOfAccount][0])
     sleep(2)
     driver.find_element(
-        By.NAME, 'password').send_keys(account[numberOfAccount][1])
+        By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1])
     sleep(2)
     try:
         driver.find_element(
@@ -55,7 +56,7 @@ def login(numberOfAccount):  # Login function
             By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
         ).click()
     sleep(20)
-    print(f"Logged in with {account[numberOfAccount][0]}")
+    print(f"Logged in with {credentials.account[numberOfAccount][0]}")
 
 
 def sendComment(commentText, postURL):  # Send Comments
@@ -147,14 +148,14 @@ def unfollow(username):
 def CreateImage(text, background, color=None):
     if text == None:
         return "crash"
-    if account[int(argv[1])][3] == 1:
+    if credentials.account[int(argv[1])][3] == 1:
         html = """<!DOCTYPE html>
                     <html lang="en">
                     <head>
                         <meta charset="UTF-8">
                         <style>
                                 @font-face {
-                                    font-family: "myfont";
+                                    font-family: "myFont";
                                     src: url("./webPanel/Tanha.ttf");
                                 }
                                 body {"""+f"""
@@ -167,7 +168,7 @@ def CreateImage(text, background, color=None):
                     </head>
                     <body>"""+f"""
                     <div style="
-                            font-family: myfont;
+                            font-family: myFont;
                             font-size:4vw;
                             margin: 0;
                             position: absolute;
@@ -176,7 +177,7 @@ def CreateImage(text, background, color=None):
                             -ms-transform: translate(-50%, -50%);
                             transform: translate(-50%, -50%);
                             text-align: center;
-                            color: {account[int(argv[1])][4][color]};
+                            color: {credentials.account[int(argv[1])][4][color]};
                             ">
                             {text}
                             </div>
@@ -189,7 +190,7 @@ def CreateImage(text, background, color=None):
                 <meta charset="UTF-8">
                 <style>
                         @font-face {
-                            font-family: "myfont";
+                            font-family: "myFont";
                             src: url("./webPanel/Tanha.ttf");
                         }
                         body {"""+f"""
@@ -202,7 +203,7 @@ def CreateImage(text, background, color=None):
             </head>
             <body>"""+f"""
             <div style="
-                    font-family: myfont;
+                    font-family: myFont;
                     font-size:4vw;
                     margin: 0;
                     position: absolute;
@@ -211,7 +212,7 @@ def CreateImage(text, background, color=None):
                     -ms-transform: translate(-50%, -50%);
                     transform: translate(-50%, -50%);
                     text-align: center;
-                    color: {account[int(argv[1])][4][0]};
+                    color: {credentials.account[int(argv[1])][4][0]};
                     ">
                     {text}
                     </div>
@@ -229,7 +230,7 @@ def CreateImage(text, background, color=None):
 
 def pickPost():
     # select random Channel
-    chosen = choice(channels[account[int(argv[1])][2]])
+    chosen = choice(credentials.channels[credentials.account[int(argv[1])][2]])
     channel = chosen[0]
     pattern = chosen[1]
     # it will pick a random post from telegram channel which in here is our Post source
@@ -279,10 +280,11 @@ def pickPost():
             return postText[:-l]
 
 
-def sendPost(caption=captions[int(argv[1])]):
+def sendPost(caption=credentials.captions[int(argv[1])]):
     if checkForCrashed == "crash":
         return
-    driver.get(f"https://www.instagram.com/{account[int(argv[1])][0]}")
+    driver.get(
+        f"https://www.instagram.com/{credentials.account[int(argv[1])][0]}")
     sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').click()
@@ -332,7 +334,7 @@ while True:
     while True:
         try:
             # Create Image (check if background changes)
-            if account[int(argv[1])][3] == 1:
+            if credentials.account[int(argv[1])][3] == 1:
                 with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                     data = int(f.read())
                     f.seek(0)
@@ -348,7 +350,8 @@ while True:
             # Upload the created image
             sendPost()
             # Follow few pages
-            follow(choice(followSource[account[int(argv[1])][2]]))
+            follow(
+                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
@@ -357,6 +360,7 @@ while True:
             driver.quit()
             # here you can set the delay time
             sleep(choice(range(3400, 3800)))
+            reload(credentials)
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
             print(excep)
