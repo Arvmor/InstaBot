@@ -3,16 +3,21 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from PIL import Image, ImageDraw, ImageFont
 from signal import signal, SIGINT
-from arabic_reshaper import reshape
-from bidi.algorithm import get_display
 from time import sleep
-from os import system
+from os import system, getcwd
 from credentials import account, channels, followSource
 from random import choice
 from sys import argv
+
 # functions
+
+
+def writeFile(variableName):  # save data into file
+    with open(f"./CreateImage.html", "+w") as fileHandle:
+        for d in variableName:
+            fileHandle.write("%s" % d)
+        fileHandle.close()
 
 
 def signal_handler(signal, frame):  # Handle Ctrl-C
@@ -50,7 +55,7 @@ def login(numberOfAccount):  # Login function
             By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
         ).click()
 
-    sleep(5)
+    sleep(20)
     print(f"Logged in with {account[numberOfAccount][0]}")
 
 
@@ -139,36 +144,42 @@ def unfollow(username):
 def CreateImage(text):
     if text == None:
         return "crash"
-    # Enhance Text
-    spaceCounter = 0
-    enhancedText = ""
-    for i in range(len(text)):
-        if text[i] == " ":
-            spaceCounter += 1
-        if spaceCounter == 5:
-            spaceCounter = 0
-            enhancedText += '\n'
-        else:
-            enhancedText += text[i]
-    text = enhancedText
+    html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+             @font-face {
+                 font-family: "myfont";
+                 src: url("./webPanel/Tanha.ttf");
+             }
+             body {
+                overflow-y: hidden;
+                overflow-x: hidden;
+                }
+        </style>
+</head>
+<body>"""+f"""
+<div style="
+        font-family: myfont;
+        font-size:4vw;
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+        ">
+        {text}
+        </div>
+</body>
+</html>"""
     # Create image
-    # image = Image.open("./webPanel/download.jpeg")
-    W, H = (640, 640)
-    text = text.encode('utf-8').strip()
-    image = Image.new("RGBA", (W, H), "white")
-    draw = ImageDraw.Draw(image)
-    w, h = draw.textsize(text)
-    fontSize = int(590/(0.0625*w))
-    font = ImageFont.truetype("./webPanel/Tanha.ttf",
-                              fontSize, encoding="unic")
-    w, h = draw.textsize(text.decode('utf-8'), font=font)
-    x = ((320)-(w/2))*(320/(w/2))
-    if x < 0:
-        x = ((320)-(w/2))*(-(320/(w/2))*1.5)
-    y = (320)-(h/2)
-    draw.text((x, y), get_display(reshape(text.decode('utf-8'))), fill="black",
-              font=font, align='center')
-    image.save(f"/tmp/{argv[1]}InstaImage.png")
+    writeFile(html)
+    driver.get(f'file:///{getcwd()}/CreateImage.html')
+    driver.set_window_size(640, 640)
+    driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
 
 
 def pickPost():
@@ -242,6 +253,12 @@ def sendPost(caption="Donate :)"):
         By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaImage.png')
+
+
+def clear():  # will close useless tabs
+    sleep(1)
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
 
 
 # Driver settings
