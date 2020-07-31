@@ -54,7 +54,6 @@ def login(numberOfAccount):  # Login function
         driver.find_element(
             By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
         ).click()
-
     sleep(20)
     print(f"Logged in with {account[numberOfAccount][0]}")
 
@@ -145,36 +144,36 @@ def CreateImage(text):
     if text == None:
         return "crash"
     html = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <style>
-             @font-face {
-                 font-family: "myfont";
-                 src: url("./webPanel/Tanha.ttf");
-             }
-             body {
-                overflow-y: hidden;
-                overflow-x: hidden;
-                }
-        </style>
-</head>
-<body>"""+f"""
-<div style="
-        font-family: myfont;
-        font-size:4vw;
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        text-align: center;
-        ">
-        {text}
-        </div>
-</body>
-</html>"""
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                            @font-face {
+                                font-family: "myfont";
+                                src: url("./webPanel/Tanha.ttf");
+                            }
+                            body {
+                                overflow-y: hidden;
+                                overflow-x: hidden;
+                                }
+                        </style>
+                </head>
+                <body>"""+f"""
+                <div style="
+                        font-family: myfont;
+                        font-size:4vw;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        -ms-transform: translate(-50%, -50%);
+                        transform: translate(-50%, -50%);
+                        text-align: center;
+                        ">
+                        {text}
+                        </div>
+                </body>
+                </html>"""
     # Create image
     writeFile(html)
     driver.get(f'file:///{getcwd()}/CreateImage.html')
@@ -188,8 +187,6 @@ def pickPost():
     channel = chosen[0]
     pattern = chosen[1]
     # it will pick a random post from telegram channel which in here is our Post source
-    driver.execute_script("window.open('');")
-    driver.switch_to.window(driver.window_handles[1])
     driver.get(f"https://t.me/s/{channel}")
     # Find last post id
     postHref = driver.find_element(
@@ -225,10 +222,13 @@ def pickPost():
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
                 return
         except:
+            newLineCounter = 0
             if pattern == 0:
                 for l in range(1, len(postText)):
                     if postText[-l] == '\n':
                         l -= 1
+                        newLineCounter += 1
+                    if newLineCounter == 2:
                         break
             return postText[:-l]
 
@@ -243,10 +243,10 @@ def sendPost(caption="Donate :)"):
     sleep(1)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaImage.png')
-    sleep(5)
+    sleep(15)
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
-    sleep(5)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/div[2]/section[1]/div[1]/textarea').send_keys(caption)
     driver.find_element(
@@ -279,8 +279,8 @@ try:
     # numberOfAccount = int(load("accountNumber"))
     # commentText = load("commentText")
     # postURL = load("postURLText")
-    login(int(argv[1]))
     checkForCrashed = CreateImage(pickPost())
+    login(int(argv[1]))
     sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
