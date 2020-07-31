@@ -9,7 +9,7 @@ def writeFile(variableName):
             fileHandle.write("%s" % d)
 
 
-for i in range(i, len(argv)):
+for i in range(1, len(argv)):
     if argv[i] != 'EndRetweet':
         credentials.channels.append(argv[i][26:-1])
     else:
