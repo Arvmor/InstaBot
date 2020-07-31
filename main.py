@@ -333,14 +333,13 @@ while True:
         try:
             # Create Image (check if background changes)
             if account[int(argv[1])][3] == 1:
-                whichBGtoUse = open(f"./userInputs/bgUser{argv[1]}.txt", "r")
-                bgToUse = int(whichBGtoUse.read())
-                whichBGtoUse.close()
+                with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
+                    data = f.read()
+                    f.seek(0)
+                    f.write(data + 1)
+                    f.truncate()
                 checkForCrashed = CreateImage(
-                    pickPost(), f'./CreateImage/{argv[1]}-{bgToUse%2}.png', bgToUse % 2)
-                with open(f"./userInputs/bgUser{argv[1]}.txt", "+w") as fileHandle:
-                    fileHandle.write(bgToUse+1)
-                    fileHandle.close()
+                    pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
             else:
                 checkForCrashed = CreateImage(
                     pickPost(), f'./CreateImage/{argv[1]}.png')
