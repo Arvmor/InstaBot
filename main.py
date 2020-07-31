@@ -262,11 +262,9 @@ try:
     # numberOfAccount = int(load("accountNumber"))
     # commentText = load("commentText")
     # postURL = load("postURLText")
-    # login(int(argv[1]))
-    checkForCrashed = CreateImage(
-        """یسری دکور چوبی mdf خیلی تمیز داشتیم. همونو الان بخوای بسازی با قیمت و دستمزد فکر نکنم کمتر از ۲۵ میلیون بیفته. گذاشتم فروش اینترنتی گفتم شاید به درد یکی خورد و شاید یه دمت گرم هم بما گفت. قیمت گذاشتم ۴ تومن. اونقدر چونه زدن رفتم پاک کردم . گذاشتم واسه چهارشنبه سوری آتیش بزنیم"""
-    )
-    # sendPost()
+    login(int(argv[1]))
+    checkForCrashed = CreateImage(pickPost())
+    sendPost()
     # sendComment(commentText, postURL)
     # sendLike(postURL=postURL, samePost=True)
     # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
