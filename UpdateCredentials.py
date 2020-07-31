@@ -32,7 +32,7 @@ i += 1
 
 # Write to file
 newText = f"""account = {credentials.account}
-retweetSource = {credentials.channels}
-followIdList = {credentials.followSource}
-errorText = {credentials.captions}"""
+channels = {credentials.channels}
+followSource = {credentials.followSource}
+captions = {credentials.captions}"""
 writeFile(newText)
