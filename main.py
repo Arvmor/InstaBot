@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from signal import signal, SIGINT
 from time import sleep
 from os import system, getcwd
-from credentials import account, channels, followSource
+from credentials import account, channels, followSource, captions
 from random import choice
 from sys import argv
 
@@ -123,10 +123,14 @@ def forwardPost(postURL=None, samePost=False, username=None):
 
 def follow(username):
     driver.get(f"https://www.instagram.com/{username}/")
-    sleep(5)
+    sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/header/section/div[1]/div[1]/span/span[1]/button').click()
+        By.XPATH, '//*[@id="react-root"]/section/main/div/ul/li[2]/a').click()
     sleep(5)
+    for i in range(2, 16):
+        driver.find_element(
+            By.XPATH, f'//*[@id="react-root"]/section/main/div/ul/div/li[{i}]/div/div[2]/button').click()
+        sleep(2)
 
 
 def unfollow(username):
@@ -178,7 +182,10 @@ def CreateImage(text):
     writeFile(html)
     driver.get(f'file:///{getcwd()}/CreateImage.html')
     driver.set_window_size(640, 640)
+    sleep(5)
     driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
+    sleep(5)
+    driver.set_window_size(438, 894)
 
 
 def pickPost():
@@ -233,7 +240,7 @@ def pickPost():
             return postText[:-l]
 
 
-def sendPost(caption="Donate :)"):
+def sendPost(caption=captions[int(argv[1])]):
     if checkForCrashed == "crash":
         return
     driver.get(f"https://www.instagram.com/{account[int(argv[1])][0]}")
@@ -271,24 +278,31 @@ chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument(
     "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
 chrome_options.add_argument("--log-level=OFF")
-driver = webdriver.Chrome("chromedriver", options=chrome_options)
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
+# Variables
+driver = webdriver.Chrome("chromedriver", options=chrome_options)
+TotalRunTime = 10
+runtimehour = 0
+
 # Main code
-try:
-    # numberOfAccount = int(load("accountNumber"))
-    # commentText = load("commentText")
-    # postURL = load("postURLText")
-    checkForCrashed = CreateImage(pickPost())
-    login(int(argv[1]))
-    sendPost()
-    # sendComment(commentText, postURL)
-    # sendLike(postURL=postURL, samePost=True)
-    # sendReplay(postURL=postURL, samePost=True, commentNumber=2, commentText="salam")
-    # forwardPost(postURL=postURL, samePost=True, username="9gag")
-    # follow("9gag")
-    # unfollow("instagram")
-    driver.quit()
-except Exception as excep:
-    print(excep)
-    driver.quit()
+while True:
+    if runtimehour == TotalRunTime:
+        runtimehour = 0
+        sleep(choice(range(50000, 50800)))
+    while True:
+        try:
+            checkForCrashed = CreateImage(pickPost())
+            login(int(argv[1]))
+            sendPost()
+            follow(choice(followSource[account[int(argv[1])][2]]))
+            runtimehour += 1
+            print(f"All done ! {runtimehour}/{TotalRunTime}")
+            if runtimehour == TotalRunTime:
+                break
+            # here you can set the delay time
+            driver.quit()
+            sleep(choice(range(3400, 3800)))
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
+        except Exception as excep:
+            print(excep)
