@@ -157,12 +157,12 @@ def CreateImage(text, background, color=None):
                                     font-family: "myfont";
                                     src: url("./webPanel/Tanha.ttf");
                                 }
-                                body {"""+"""
-                                    background-image: url('{background}');
+                                body {"""+f"""
+                                    background-image: url({background});
                                     background-repeat: no-repeat;
                                     overflow-y: hidden;
                                     overflow-x: hidden;
-                                    }
+                                    """+"""}
                             </style>
                     </head>
                     <body>"""+f"""
@@ -192,12 +192,12 @@ def CreateImage(text, background, color=None):
                             font-family: "myfont";
                             src: url("./webPanel/Tanha.ttf");
                         }
-                        body {"""+"""
+                        body {"""+f"""
                             background-image: url('{background}');
                             background-repeat: no-repeat;
                             overflow-y: hidden;
                             overflow-x: hidden;
-                            }
+                            """+"""}
                     </style>
             </head>
             <body>"""+f"""
@@ -334,9 +334,9 @@ while True:
             # Create Image (check if background changes)
             if account[int(argv[1])][3] == 1:
                 with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
-                    data = f.read()
+                    data = int(f.read())
                     f.seek(0)
-                    f.write(data + 1)
+                    f.write(str(data + 1))
                     f.truncate()
                 checkForCrashed = CreateImage(
                     pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
