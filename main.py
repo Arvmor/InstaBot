@@ -295,6 +295,24 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
 
+def sendStory():
+    if checkForCrashed == "crash":
+        return
+    driver.get(
+        f"https://www.instagram.com/")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+    sleep(15)
+    driver.find_element(
+        By.XPATH, '//*[@id="react-root"]/section/footer/div/div/button').click()
+    sleep(60)
+    system(f'rm /tmp/{argv[1]}InstaStory.png')
+
+
 def clear():  # will close useless tabs
     sleep(1)
     driver.close()
@@ -344,6 +362,7 @@ while True:
             login(int(argv[1]))
             # Upload the created image
             sendPost()
+            sendStory()
             # Follow few pages
             follow(
                 choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
