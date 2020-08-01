@@ -316,9 +316,10 @@ while True:
                     f.seek(0)
                     f.write(str(data + 1))
                     f.truncate()
-                    pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                    checkForCrashed = CreateImage(
+                        pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
             else:
-                checkForCrashed=CreateImage(
+                checkForCrashed = CreateImage(
                     pickPost(), f'./CreateImage/{argv[1]}.png')
             # Login
             login(int(argv[1]))
@@ -336,6 +337,6 @@ while True:
             # here you can set the delay time
             sleep(choice(range(3400, 3800)))
             reload(credentials)
-            driver=webdriver.Chrome("chromedriver", options = chrome_options)
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
             print(excep)
