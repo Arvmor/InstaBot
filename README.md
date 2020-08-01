@@ -15,5 +15,6 @@ Sample ScreenShot:
 The **AUTHOR** is not responsible for any misuse and misbehaviour of the contained DATA. So the Auther is NOT RESPONSIBLE !
 
 # ToDo List
-- [ ] Add more functions
-- [ ] Add more options to the WebPanel
+- [ ] Add SendStory function
+- [ ] Improve UpdateCredentials
+- [ ] Add text filter
