@@ -10,7 +10,7 @@ from importlib import reload
 import credentials
 from random import choice
 from sys import argv
-
+from pyautogui import hotkey
 # functions
 
 
@@ -298,17 +298,29 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
 def sendStory():
     if checkForCrashed == "crash":
         return
-    driver.get(
-        f"https://www.instagram.com/")
-    sleep(5)
-    driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+    driver.get("https://www.instagram.com/")
     sleep(15)
+    try:
+        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
+            driver.find_element(
+                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
+        sleep(2)
+    except:
+        pass
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/footer/div/div/button').click()
+        By.XPATH, '/html/body/div[1]/section/main/section/div[1]/div/div/div/div[1]/button').click()
+    sleep(1)
+    try:
+        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div[2]/div/div[5]/button'):
+            driver.find_element(
+                By.XPATH, '/html/body/div[4]/div/div[2]/div/div[5]/button').click()
+    except:
+        pass
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+    sleep(10)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/section/footer/div/div/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaStory.png')
 
@@ -358,6 +370,13 @@ while True:
             # Create Image for story
             checkForCrashed = CreateImage("story",
                                           pickPost(), f'./CreateImage/s{argv[1]}.png')
+            # Change To firefox for somereason
+            driver.quit()
+            user_agent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16"
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference("general.useragent.override", user_agent)
+            driver = webdriver.Firefox(profile)
+            hotkey('ctrl', 'shift', 'm')
             # Login
             login(int(argv[1]))
             # Upload the created image
