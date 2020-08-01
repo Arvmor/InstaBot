@@ -132,6 +132,6 @@ credentials.py
 ~/
 test.*
 CreateImage.html
-*-*.png
-3.png
+CreateStory.html
+*.png
 bgUser*.txt

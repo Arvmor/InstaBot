@@ -14,16 +14,23 @@ from sys import argv
 # functions
 
 
-def writeFile(variableName):  # save data into file
-    with open(f"./CreateImage.html", "+w") as fileHandle:
-        for d in variableName:
-            fileHandle.write("%s" % d)
-        fileHandle.close()
+def writeFile(variableName, mode):  # save data into file
+    if mode == "post":
+        with open(f"./CreateImage.html", "+w") as fileHandle:
+            for d in variableName:
+                fileHandle.write("%s" % d)
+            fileHandle.close()
+    elif mode == "story":
+        with open(f"./CreateStory.html", "+w") as fileHandle:
+            for d in variableName:
+                fileHandle.write("%s" % d)
+            fileHandle.close()
 
 
 def signal_handler(signal, frame):  # Handle Ctrl-C
     # system("sudo service apache2 stop")
     system(f'rm /tmp/{argv[1]}InstaImage.png')
+    system(f'rm /tmp/{argv[1]}InstaStory.png')
     print("Closing the script")
     driver.quit()
     exit(0)
@@ -145,7 +152,7 @@ def unfollow(username):
     sleep(5)
 
 
-def CreateImage(text, background, color=None):
+def CreateImage(mode, text, background, color=None):
     if text == None:
         return "crash"
     # Create a HTML file
@@ -182,24 +189,33 @@ def CreateImage(text, background, color=None):
                         -ms-transform: translate(-50%, -50%);
                         transform: translate(-50%, -50%);
                         text-align: center;"""
-    if color != None:
-        html += f"""color: {credentials.account[int(argv[1])][4][color]};">"""
-    else:
-        html += f"""color: {credentials.account[int(argv[1])][4][0]};">"""
-    html += f"""{text}</div>
-        <div style="
-        font-family: myFont2;
-        position: absolute;
-        {credentials.account[int(argv[1])][5]}
-        ">
-        <strong>@{credentials.account[int(argv[1])][0]}</strong>
-        </div></body></html>"""
-    # Create image
-    writeFile(html)
-    driver.get(f'file:///{getcwd()}/CreateImage.html')
-    driver.set_window_size(640, 640)
-    sleep(5)
-    driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
+    if mode == "post":
+        if color != None:
+            html += f"""color: {credentials.account[int(argv[1])][4][color]};">"""
+        else:
+            html += f"""color: {credentials.account[int(argv[1])][4][0]};">"""
+        html += f"""{text}</div>
+            <div style="
+            font-family: myFont2;
+            position: absolute;
+            {credentials.account[int(argv[1])][5][0]}
+            ">
+            <strong>@{credentials.account[int(argv[1])][0]}</strong>
+            </div></body></html>"""
+        # Create image
+        writeFile(html, "post")
+        driver.get(f'file:///{getcwd()}/CreateImage.html')
+        driver.set_window_size(640, 640)
+        sleep(5)
+        driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
+    elif mode == "story":
+        html += f"""color: {credentials.account[int(argv[1])][4][1]};">{text}</div><div style="font-family: myFont2;position: absolute;{credentials.account[int(argv[1])][5][1]}"><strong>@{credentials.account[int(argv[1])][0]}</strong></div></body></html>"""
+        # Create image
+        writeFile(html, "story")
+        driver.get(f'file:///{getcwd()}/CreateStory.html')
+        driver.set_window_size(1242, 2208)
+        sleep(5)
+        driver.save_screenshot(f"/tmp/{argv[1]}InstaStory.png")
     sleep(5)
     driver.set_window_size(438, 894)
 
@@ -309,18 +325,21 @@ while True:
         sleep(choice(range(50000, 50800)))
     while True:
         try:
-            # Create Image (check if background changes)
+            # Create Image for post
             if credentials.account[int(argv[1])][3] == 1:
                 with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                     data = int(f.read())
                     f.seek(0)
                     f.write(str(data + 1))
                     f.truncate()
-                    checkForCrashed = CreateImage(
-                        pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                    checkForCrashed = CreateImage("post",
+                                                  pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
             else:
-                checkForCrashed = CreateImage(
-                    pickPost(), f'./CreateImage/{argv[1]}.png')
+                checkForCrashed = CreateImage("post",
+                                              pickPost(), f'./CreateImage/{argv[1]}.png')
+            # Create Image for story
+            checkForCrashed = CreateImage("story",
+                                          pickPost(), f'./CreateImage/s{argv[1]}.png')
             # Login
             login(int(argv[1]))
             # Upload the created image
