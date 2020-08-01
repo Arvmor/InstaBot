@@ -148,83 +148,59 @@ def unfollow(username):
 def CreateImage(text, background, color=None):
     if text == None:
         return "crash"
-    if credentials.account[int(argv[1])][3] == 1:
-        html = """<!DOCTYPE html>
-                    <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <style>
-                                @font-face {
-                                    font-family: "myFont";
-                                    src: url("./webPanel/Tanha.ttf");
-                                }
-                                body {"""+f"""
-                                    background-image: url({background});
-                                    background-repeat: no-repeat;
-                                    overflow-y: hidden;
-                                    overflow-x: hidden;
-                                    """+"""}
-                            </style>
-                    </head>
-                    <body>"""+f"""
-                    <div style="
-                            font-family: myFont;
-                            font-size:4vw;
-                            margin: 0;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            -ms-transform: translate(-50%, -50%);
-                            transform: translate(-50%, -50%);
-                            text-align: center;
-                            color: {credentials.account[int(argv[1])][4][color]};
-                            ">
-                            {text}
-                            </div>
-                    </body>
-                    </html>"""
-    else:
-        html = """<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <style>
+    # Create a HTML file
+    html = """<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
                         @font-face {
-                            font-family: "myFont";
-                            src: url("./webPanel/Tanha.ttf");
+                                font-family: "myFont";
+                                src: url("./webPanel/Tanha.ttf");
                         }
-                        body {"""+f"""
-                            background-image: url('{background}');
-                            background-repeat: no-repeat;
-                            overflow-y: hidden;
-                            overflow-x: hidden;
-                            """+"""}
-                    </style>
-            </head>
-            <body>"""+f"""
-            <div style="
-                    font-family: myFont;
-                    font-size:4vw;
-                    margin: 0;
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    -ms-transform: translate(-50%, -50%);
-                    transform: translate(-50%, -50%);
-                    text-align: center;
-                    color: {credentials.account[int(argv[1])][4][0]};
-                    ">
-                    {text}
-                    </div>
-            </body>
-            </html>"""
+
+                        @font-face {
+                                font-family: "myFont2";
+                                src: url("./webPanel/MyFont.woff2");
+                        }
+                            body {"""+f"""
+                                background-image: url({background});
+                                background-repeat: no-repeat;
+                                overflow-y: hidden;
+                                overflow-x: hidden;
+                                """+"""}
+                        </style>
+                </head>
+                <body>
+                <div style="
+                        font-family: myFont;
+                        font-size:4vw;
+                        margin: 0;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        -ms-transform: translate(-50%, -50%);
+                        transform: translate(-50%, -50%);
+                        text-align: center;"""
+    if color != None:
+        html += f"""color: {credentials.account[int(argv[1])][4][color]};">"""
+    else:
+        html += f"""color: {credentials.account[int(argv[1])][4][0]};">"""
+    html += f"""{text}</div>
+        <div style="
+        font-family: myFont2;
+        position: absolute;
+        {credentials.account[int(argv[1])][5]}
+        ">
+        <strong>@{credentials.account[int(argv[1])][0]}</strong>
+        </div></body></html>"""
     # Create image
     writeFile(html)
     driver.get(f'file:///{getcwd()}/CreateImage.html')
     driver.set_window_size(640, 640)
     sleep(5)
     driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
-    sleep(5)
+    sleep(10)
     driver.set_window_size(438, 894)
 
 
@@ -323,7 +299,7 @@ signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
-TotalRunTime = 10
+TotalRunTime = 2
 runtimehour = 0
 
 # Main code
@@ -341,17 +317,17 @@ while True:
                     f.write(str(data + 1))
                     f.truncate()
                 checkForCrashed = CreateImage(
-                    pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                    """Tehrano la kon آروین ده هوشمند هیایهاهاه ورک کد. این شما و اینم ۶/۸ ساسی مانکن خدای اهنگ""", f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
             else:
                 checkForCrashed = CreateImage(
-                    pickPost(), f'./CreateImage/{argv[1]}.png')
+                    """Tehrano la kon آروین ده هوشمند هیایهاهاه ورک کد. این شما و اینم ۶/۸ ساسی مانکن خدای اهنگ""", f'./CreateImage/{argv[1]}.png')
             # Login
-            login(int(argv[1]))
-            # Upload the created image
-            sendPost()
-            # Follow few pages
-            follow(
-                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+            # login(int(argv[1]))
+            # # Upload the created image
+            # sendPost()
+            # # Follow few pages
+            # follow(
+            #     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
@@ -359,7 +335,7 @@ while True:
                 break
             driver.quit()
             # here you can set the delay time
-            sleep(choice(range(3400, 3800)))
+            sleep(choice(range(5, 6)))
             reload(credentials)
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
