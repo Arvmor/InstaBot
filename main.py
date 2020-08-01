@@ -200,7 +200,7 @@ def CreateImage(text, background, color=None):
     driver.set_window_size(640, 640)
     sleep(5)
     driver.save_screenshot(f"/tmp/{argv[1]}InstaImage.png")
-    sleep(10)
+    sleep(5)
     driver.set_window_size(438, 894)
 
 
@@ -299,7 +299,7 @@ signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 driver = webdriver.Chrome("chromedriver", options=chrome_options)
-TotalRunTime = 2
+TotalRunTime = 10
 runtimehour = 0
 
 # Main code
@@ -316,18 +316,17 @@ while True:
                     f.seek(0)
                     f.write(str(data + 1))
                     f.truncate()
-                checkForCrashed = CreateImage(
-                    """Tehrano la kon آروین ده هوشمند هیایهاهاه ورک کد. این شما و اینم ۶/۸ ساسی مانکن خدای اهنگ""", f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                    pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
             else:
-                checkForCrashed = CreateImage(
-                    """Tehrano la kon آروین ده هوشمند هیایهاهاه ورک کد. این شما و اینم ۶/۸ ساسی مانکن خدای اهنگ""", f'./CreateImage/{argv[1]}.png')
+                checkForCrashed=CreateImage(
+                    pickPost(), f'./CreateImage/{argv[1]}.png')
             # Login
-            # login(int(argv[1]))
-            # # Upload the created image
-            # sendPost()
-            # # Follow few pages
-            # follow(
-            #     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+            login(int(argv[1]))
+            # Upload the created image
+            sendPost()
+            # Follow few pages
+            follow(
+                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
@@ -335,8 +334,8 @@ while True:
                 break
             driver.quit()
             # here you can set the delay time
-            sleep(choice(range(5, 6)))
+            sleep(choice(range(3400, 3800)))
             reload(credentials)
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
+            driver=webdriver.Chrome("chromedriver", options = chrome_options)
         except Exception as excep:
             print(excep)
