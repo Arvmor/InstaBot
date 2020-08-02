@@ -330,6 +330,7 @@ signal(SIGINT, signal_handler)  # Handle Ctrl-C
 chromedriver = "chromedriver.exe"
 TotalRunTime = 10
 runtimehour = 0
+posted = False
 
 # Main code
 while True:
@@ -366,7 +367,7 @@ while True:
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument("--auto-open-devtools-for-tabs")
             chrome_options.add_argument(
-                "user-data-dir=./userInputs/Profile/")
+                f"user-data-dir=./userInputs/Profile{argv[1]}/")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--disable-dev-shm-usage")
             chrome_options.add_argument("--log-level=3")
@@ -392,3 +393,10 @@ while True:
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
             print(excep)
+            runtimehour += 1
+            if runtimehour == TotalRunTime:
+                break
+            driver.quit()
+            sleep(choice(range(3400, 3800)))
+            reload(credentials)
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
