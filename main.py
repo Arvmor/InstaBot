@@ -308,7 +308,7 @@ def sendStory():
     except:
         pass
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/section/div[1]/div/div/div/div[1]/button').click()
+        By.XPATH, '/html/body/div[1]/section/nav[1]/div/div/header/div/div[1]/button').click()
     sleep(1)
     try:
         if driver.find_element(By.XPATH, '/html/body/div[4]/div/div[2]/div/div[5]/button'):
@@ -317,7 +317,7 @@ def sendStory():
     except:
         pass
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/section/div[1]/div/div/div/div[1]/button/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+        By.XPATH, '/html/body/div[1]/section/nav[1]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/footer/div/div/button').click()
