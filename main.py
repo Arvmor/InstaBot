@@ -3,6 +3,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from signal import signal, SIGINT
 from time import sleep
 from os import system, getcwd
@@ -10,7 +11,6 @@ from importlib import reload
 import credentials
 from random import choice
 from sys import argv
-from pyautogui import hotkey
 # functions
 
 
@@ -46,23 +46,16 @@ def load(filename):
 
 
 def login(numberOfAccount):  # Login function
+    driver.get('https://www.instagram.com/accounts/logout/')
+    sleep(5)
     driver.get('https://www.instagram.com/accounts/login/')
     sleep(10)
     driver.find_element(
         By.NAME, 'username').send_keys(credentials.account[numberOfAccount][0])
     sleep(2)
     driver.find_element(
-        By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1])
-    sleep(2)
-    try:
-        driver.find_element(
-            By.XPATH, '//*[@id="react-root"]/section/main/article/div/div/div/form/div[5]/button'
-        ).click()
-    except:
-        driver.find_element(
-            By.XPATH, '/html/body/div[1]/section/main/article/div/div/div/form/div[7]/button'
-        ).click()
-    sleep(20)
+        By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
+    sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
 
 
@@ -331,20 +324,10 @@ def clear():  # will close useless tabs
     driver.switch_to.window(driver.window_handles[0])
 
 
-# Driver settings
-chromedriver = "chromedriver.exe"
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument(
-    "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
-chrome_options.add_argument("--log-level=OFF")
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
-driver = webdriver.Chrome("chromedriver", options=chrome_options)
+chromedriver = "chromedriver.exe"
 TotalRunTime = 10
 runtimehour = 0
 
@@ -355,6 +338,14 @@ while True:
         sleep(choice(range(50000, 50800)))
     while True:
         try:
+            # Driver settings
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--log-level=3")
+            chrome_options.add_argument("--log-level=OFF")
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Create Image for post
             if credentials.account[int(argv[1])][3] == 1:
                 with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
@@ -372,11 +363,16 @@ while True:
                                           pickPost(), f'./CreateImage/s{argv[1]}.png')
             # Change To firefox for somereason
             driver.quit()
-            user_agent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16"
-            profile = webdriver.FirefoxProfile()
-            profile.set_preference("general.useragent.override", user_agent)
-            driver = webdriver.Firefox(profile)
-            hotkey('ctrl', 'shift', 'm')
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument(
+                "user-data-dir=./userInputs/Profile")
+            chrome_options.add_argument("--auto-open-devtools-for-tabs")
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--log-level=3")
+            chrome_options.add_argument("--log-level=OFF")
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Login
             login(int(argv[1]))
             # Upload the created image
