@@ -262,7 +262,25 @@ def pickPost():
                         newLineCounter += 1
                     if newLineCounter == 2:
                         break
-            return postText[:-l]
+            elif pattern == 1:
+                ch = -24
+                while abs(ch) != len(postText):
+                    if postText[ch] == '》' or postText[ch] == '×' or postText[ch] == '•' or postText[ch] == '»' or postText[ch] == '*' or postText[ch] == '※' or postText[ch] == '☆':
+                        postText = postText[:ch]
+                    ch -= 1
+                postText = postText.strip()
+                ch = -1
+                while abs(ch) != len(postText):
+                    if postText[ch] == '×' or postText[ch] == '•' or postText[ch] == '*' or postText[ch] == '※' or postText[ch] == '☆':
+                        postText = postText[:ch]
+                    ch -= 1
+                postText = postText.strip()
+            # Filter Text for last time
+            if len(postText[:-l]) > 10:
+                for s in range(1, len(postText[:-l])):
+                    if postText[:-l][-s] != '@':
+                        return
+                return postText[:-l]
 
 
 def sendPost(caption=credentials.captions[int(argv[1])]):
