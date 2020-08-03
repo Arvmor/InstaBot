@@ -291,23 +291,9 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     driver.get(
         f"https://www.instagram.com/")
     sleep(5)
-    try:
-        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
-            driver.find_element(
-                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
-        sleep(2)
-    except:
-        pass
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').click()
     sleep(1)
-    try:
-        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
-            driver.find_element(
-                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
-        sleep(2)
-    except:
-        pass
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaImage.png')
     sleep(15)
@@ -327,13 +313,6 @@ def sendStory():
         return
     driver.get("https://www.instagram.com/")
     sleep(15)
-    try:
-        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
-            driver.find_element(
-                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
-        sleep(2)
-    except:
-        pass
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[1]/div/div/header/div/div[1]/button').click()
     sleep(1)
