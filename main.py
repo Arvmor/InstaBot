@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -31,7 +31,7 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
     # system("sudo service apache2 stop")
     system(f'rm /tmp/{argv[1]}InstaImage.png')
     system(f'rm /tmp/{argv[1]}InstaStory.png')
-    print("Closing the script")
+    print("\nClosing the script")
     driver.quit()
     exit(0)
 
@@ -147,6 +147,7 @@ def unfollow(username):
 
 def CreateImage(mode, text, background, color=None):
     if text == None:
+        print("Crash")
         return "crash"
     # Create a HTML file
     html = """<!DOCTYPE html>
@@ -216,6 +217,7 @@ def CreateImage(mode, text, background, color=None):
 def pickPost():
     # select random Channel
     chosen = choice(credentials.channels[credentials.account[int(argv[1])][2]])
+    print(chosen)
     channel = chosen[0]
     pattern = chosen[1]
     # it will pick a random post from telegram channel which in here is our Post source
@@ -278,7 +280,7 @@ def pickPost():
             # Filter Text for last time
             if len(postText[:-l]) > 10:
                 for s in range(1, len(postText[:-l])):
-                    if postText[:-l][-s] != '@':
+                    if postText[:-l][-s] == '@':
                         return
                 return postText[:-l]
 
