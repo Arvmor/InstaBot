@@ -289,21 +289,35 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     if checkForCrashed == "crash":
         return
     driver.get(
-        f"https://www.instagram.com/{credentials.account[int(argv[1])][0]}")
+        f"https://www.instagram.com/")
     sleep(5)
+    try:
+        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
+            driver.find_element(
+                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
+        sleep(2)
+    except:
+        pass
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').click()
     sleep(1)
+    try:
+        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]'):
+            driver.find_element(
+                By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[2]').click()
+        sleep(2)
+    except:
+        pass
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaImage.png')
     sleep(15)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/div[2]/section[1]/div[1]/textarea').send_keys(caption)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
