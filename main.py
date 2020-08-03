@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from pyvirtualdisplay import Display
 from signal import signal, SIGINT
 from time import sleep
 from os import system, getcwd
@@ -289,7 +290,7 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     if checkForCrashed == "crash":
         return
     driver.get(
-        f"https://www.instagram.com/")
+        f"https://www.instagram.com/{credentials.account[int(argv[1])][0]}")
     sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/div[2]/div/div/div[3]').click()
@@ -298,12 +299,12 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
         By.XPATH, '/html/body/div[1]/section/nav[2]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaImage.png')
     sleep(15)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/div[2]/section[1]/div[1]/textarea').send_keys(caption)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/div[1]/header/div/div[2]/button').click()
+        By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
@@ -357,6 +358,8 @@ while True:
             chrome_options.add_argument("--headless")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument(
+                "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
             chrome_options.add_argument("--log-level=3")
             chrome_options.add_argument("--log-level=OFF")
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
@@ -375,8 +378,13 @@ while True:
             # Create Image for story
             checkForCrashed = CreateImage("story",
                                           pickPost(), f'./CreateImage/s{argv[1]}.png')
+            # Upload the created image
+            login(int(argv[1]))
+            sendPost()
             # Change To firefox for somereason
             driver.quit()
+            display = Display(visible=0, size=(800, 600))
+            display.start()
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument("--auto-open-devtools-for-tabs")
             chrome_options.add_argument(
@@ -389,17 +397,17 @@ while True:
             # Login
             login(int(argv[1]))
             # Upload the created image
-            sendPost()
             sendStory()
             # Follow few pages
-            follow(
-                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+            # follow(
+            #     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             if runtimehour == TotalRunTime:
                 break
             driver.quit()
+            display.stop()
             # here you can set the delay time
             sleep(choice(range(3400, 3800)))
             reload(credentials)
