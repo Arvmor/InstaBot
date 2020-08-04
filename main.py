@@ -4,7 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from pyvirtualdisplay import Display
 from signal import signal, SIGINT
 from time import sleep
 from os import system, getcwd
@@ -342,7 +341,7 @@ signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 chromedriver = "chromedriver.exe"
-TotalRunTime = 10
+TotalRunTime = 15
 runtimehour = 0
 posted = False
 
@@ -383,8 +382,6 @@ while True:
             sendPost()
             # Change To firefox for somereason
             driver.quit()
-            display = Display(visible=0, size=(800, 600))
-            display.start()
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument("--auto-open-devtools-for-tabs")
             chrome_options.add_argument(
@@ -407,9 +404,8 @@ while True:
             if runtimehour == TotalRunTime:
                 break
             driver.quit()
-            display.stop()
             # here you can set the delay time
-            sleep(choice(range(3400, 3800)))
+            sleep(choice(range(2260, 2530)))
             reload(credentials)
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
@@ -418,6 +414,6 @@ while True:
             if runtimehour == TotalRunTime:
                 break
             driver.quit()
-            sleep(choice(range(3400, 3800)))
+            sleep(choice(range(2260, 2530)))
             reload(credentials)
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
