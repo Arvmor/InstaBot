@@ -375,26 +375,26 @@ while True:
                 checkForCrashed = CreateImage("post",
                                               pickPost(), f'./CreateImage/{argv[1]}.png')
             # Create Image for story
-            checkForCrashed = CreateImage("story",
-                                          pickPost(), f'./CreateImage/s{argv[1]}.png')
+            # checkForCrashed = CreateImage("story",
+            #                               pickPost(), f'./CreateImage/s{argv[1]}.png')
             # Upload the created image
             login(int(argv[1]))
             sendPost()
             # Change To firefox for somereason
             driver.quit()
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--auto-open-devtools-for-tabs")
-            chrome_options.add_argument(
-                f"user-data-dir=./userInputs/Profile{argv[1]}/")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--log-level=3")
-            chrome_options.add_argument("--log-level=OFF")
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
+            # chrome_options = webdriver.ChromeOptions()
+            # chrome_options.add_argument("--auto-open-devtools-for-tabs")
+            # chrome_options.add_argument(
+            #     f"user-data-dir=./userInputs/Profile{argv[1]}/")
+            # chrome_options.add_argument("--no-sandbox")
+            # chrome_options.add_argument("--disable-dev-shm-usage")
+            # chrome_options.add_argument("--log-level=3")
+            # chrome_options.add_argument("--log-level=OFF")
+            # driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Login
-            login(int(argv[1]))
+            # login(int(argv[1]))
             # Upload the created image
-            sendStory()
+            # sendStory()
             # Follow few pages
             # follow(
             #     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
@@ -403,7 +403,7 @@ while True:
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             if runtimehour == TotalRunTime:
                 break
-            driver.quit()
+            # driver.quit()
             # here you can set the delay time
             sleep(choice(range(2260, 2530)))
             reload(credentials)
