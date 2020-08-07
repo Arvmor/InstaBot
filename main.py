@@ -138,9 +138,9 @@ def follow(username):
             errors += 1
             if errors >= 3:
                 break
-            if driver.find_elements(By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[1]'):
+            if driver.find_elements(By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]'):
                 driver.find_element(
-                    By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[1]').click()
+                    By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]').click()
                 sleep(4)
 
 
@@ -354,6 +354,7 @@ chromedriver = "chromedriver.exe"
 TotalRunTime = 15
 runtimehour = 0
 posted = False
+storied = False
 
 # Main code
 while True:
@@ -367,26 +368,30 @@ while True:
             chrome_options.add_argument("--headless")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument(
-                "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
+            chrome_options.add_argument("--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
             chrome_options.add_argument("--log-level=3")
             chrome_options.add_argument("--log-level=OFF")
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Create Image for post
-            if credentials.account[int(argv[1])][3] == 1:
-                with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
-                    data = int(f.read())
-                    f.seek(0)
-                    f.write(str(data + 1))
-                    f.truncate()
+            if not posted:
+                if credentials.account[int(argv[1])][3] == 1:
+                    with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
+                        data = int(f.read())
+                        f.seek(0)
+                        checkForCrashed = CreateImage("post",
+                                                    pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                        if checkForCrashed != 'crash':
+                            f.write(str(data + 1))
+                        f.truncate()
+                else:
                     checkForCrashed = CreateImage("post",
-                                                  pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
-            else:
-                checkForCrashed = CreateImage("post",
-                                              pickPost(), f'./CreateImage/{argv[1]}.png')
+                                                pickPost(), f'./CreateImage/{argv[1]}.png')
+            posted = True
             # Create Image for story
-            checkForCrashed = CreateImage("story",
+            if not storied:
+                checkForCrashed = CreateImage("story",
                                           pickPost(), f'./CreateImage/s{argv[1]}.png')
+            storied = True
             # Upload the created image
             login(int(argv[1]))
             sendPost()
@@ -401,13 +406,12 @@ while True:
             chrome_options.add_argument("--log-level=3")
             chrome_options.add_argument("--log-level=OFF")
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
-            # Login
-            login(int(argv[1]))
             # Upload the created image
+            login(int(argv[1]))
             sendStory()
             # Follow few pages
-            # follow(
-            #     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+            follow(
+                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             # going for the next round
             runtimehour += 1
             print(f"All done ! {runtimehour}/{TotalRunTime}")
@@ -416,14 +420,10 @@ while True:
             driver.quit()
             # here you can set the delay time
             sleep(choice(range(2260, 2530)))
+            posted = False
+            storied = False
             reload(credentials)
             driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
             print(excep)
-            runtimehour += 1
-            if runtimehour == TotalRunTime:
-                break
             driver.quit()
-            sleep(choice(range(2260, 2530)))
-            reload(credentials)
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
