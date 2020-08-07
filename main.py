@@ -123,15 +123,25 @@ def forwardPost(postURL=None, samePost=False, username=None):
 
 
 def follow(username):
+    errors = 0
     driver.get(f"https://www.instagram.com/{username}/")
     sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/ul/li[2]/a').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/header/section/ul/li[2]/a').click()
     sleep(5)
     for i in range(2, 16):
-        driver.find_element(
-            By.XPATH, f'//*[@id="react-root"]/section/main/div/ul/div/li[{i}]/div/div[2]/button').click()
-        sleep(2)
+        try:
+            driver.find_element(
+                By.XPATH, f'/html/body/div[4]/div/div/div[2]/ul/div/li[{i}]/div/div[3]/button').click()
+            sleep(3)
+        except:
+            errors += 1
+            if errors >= 3:
+                break
+            if driver.find_elements(By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[1]'):
+                driver.find_element(
+                    By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[1]').click()
+                sleep(4)
 
 
 def unfollow(username):
