@@ -100,7 +100,7 @@ def CreateImage(mode, text, background, color=None):
                         </style>
                 </head>
                 <body>
-                <div style="
+                <div dir="rtl" style="
                         font-family: myFont;
                         font-size:4vw;
                         margin: 0;
@@ -209,7 +209,7 @@ def pickPost():
                 for s in range(1, len(postText[:-l])):
                     if postText[:-l][-s] == '@':
                         return "failed !"
-                return postText[:-l]
+                return postText[:-l].replace("\n", "<br>")
 
 
 def sendPost(caption=credentials.captions[int(argv[1])]):
