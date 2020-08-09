@@ -185,7 +185,7 @@ def pickPost():
     try:
         if driver.find_element(
                 By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
-            raise
+            raise "error"
     except:
         try:
             if driver.find_element(
