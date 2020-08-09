@@ -127,7 +127,7 @@ def follow(username):
     driver.get(f"https://www.instagram.com/{username}/")
     sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="react-root"]/section/main/div/ul/li[2]/a').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/ul/li[2]').click()
     sleep(5)
     for i in range(2, 16):
         try:
