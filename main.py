@@ -295,8 +295,11 @@ while True:
                 # Upload the created image
                 login(int(argv[1]))
                 sendPost()
+                driver.quit()
             posted = True
             # Follow few pages
+            driver = webdriver.Chrome("chromedriver", options=chrome_options)
+            login(int(argv[1]))
             follow(
                 choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
             driver.quit()
