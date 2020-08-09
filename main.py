@@ -62,11 +62,12 @@ def login(numberOfAccount):  # Login function
 def follow(username):
     errors = 0
     driver.get(f"https://www.instagram.com/{username}/")
+    print(f"Going for follow {username}")
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/section/main/div/header/section/ul/li[2]').click()
     sleep(5)
-    for i in range(2, 16):
+    for i in range(1, 16):
         try:
             driver.find_element(
                 By.XPATH, f'/html/body/div[4]/div/div/div[2]/ul/div/li[{i}]/div/div[3]/button').click()
@@ -82,9 +83,6 @@ def follow(username):
 
 
 def CreateImage(mode, text, background, color=None):
-    if text == None:
-        print("Crash")
-        return "crash"
     # Create a HTML file
     html = """<!DOCTYPE html>
                 <html lang="en">
@@ -179,18 +177,18 @@ def pickPost():
             )
         )
     except:
-        raise
+        raise Exception("failed to get post")
     postText = driver.find_element(
         By.XPATH, '/html/body/div/div[2]/div[2]').text.strip()
     try:
         if driver.find_element(
                 By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
-            raise "error"
+            raise Exception("failed to get post")
     except:
         try:
             if driver.find_element(
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
-                raise
+                raise Exception("failed to get post")
         except:
             newLineCounter = 0
             if pattern == 0:
@@ -217,7 +215,7 @@ def pickPost():
             if len(postText[:-l]) > 10:
                 for s in range(1, len(postText[:-l])):
                     if postText[:-l][-s] == '@':
-                        raise
+                        raise Exception("failed to get post")
                 return postText[:-l]
 
 
@@ -299,7 +297,7 @@ while True:
                         f.write(str(data + 1))
                         f.truncate()
                 else:
-                    checkForCrashed = CreateImage(
+                    CreateImage(
                         "post", pickPost(), f'./CreateImage/{argv[1]}.png')
                 # Upload the created image
                 login(int(argv[1]))
