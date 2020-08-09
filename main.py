@@ -59,69 +59,6 @@ def login(numberOfAccount):  # Login function
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
 
 
-def sendComment(commentText, postURL):  # Send Comments
-    driver.get(postURL)
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').send_keys(commentText)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/button').click()
-    print(f"Commented {commentText} on this post {postURL}")
-    sleep(10)
-
-
-def sendLike(postURL=None, samePost=False):  # Like the post
-    if samePost == False:
-        driver.get(postURL)
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/span[1]/button').click()
-    print(f"liked this post {postURL}")
-    sleep(5)
-
-
-def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"):
-    if samePost == False:
-        driver.get(postURL)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').location_once_scrolled_into_view()
-    driver.find_element(
-        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').send_keys(commentText)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
-    print(f"Replayed to this post {postURL}")
-    sleep(5)
-
-
-def forwardPost(postURL=None, samePost=False, username=None):
-    if samePost == False:
-        driver.get(postURL)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/button').click()
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[4]/div/div/div/div[2]/div/div[1]/div/div/div[2]').click()
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[1]/div/div[2]/input').send_keys(username)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[2]/div[1]/div').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[1]/div/div[2]/div/button').click()
-
-
 def follow(username):
     errors = 0
     driver.get(f"https://www.instagram.com/{username}/")
@@ -142,17 +79,6 @@ def follow(username):
                 driver.find_element(
                     By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]').click()
                 sleep(4)
-
-
-def unfollow(username):
-    driver.get(f"https://www.instagram.com/{username}/")
-    sleep(5)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/header/section/div[1]/div[2]/span/span[1]/button').click()
-    sleep(2)
-    driver.find_element(
-        By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[1]').click()
-    sleep(5)
 
 
 def CreateImage(mode, text, background, color=None):
@@ -253,18 +179,18 @@ def pickPost():
             )
         )
     except:
-        return
+        raise
     postText = driver.find_element(
         By.XPATH, '/html/body/div/div[2]/div[2]').text.strip()
     try:
         if driver.find_element(
                 By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
-            return
+            raise
     except:
         try:
             if driver.find_element(
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
-                return
+                raise
         except:
             newLineCounter = 0
             if pattern == 0:
@@ -291,13 +217,11 @@ def pickPost():
             if len(postText[:-l]) > 10:
                 for s in range(1, len(postText[:-l])):
                     if postText[:-l][-s] == '@':
-                        return
+                        raise
                 return postText[:-l]
 
 
 def sendPost(caption=credentials.captions[int(argv[1])]):
-    if checkForCrashed == "crash":
-        return
     driver.get(
         f"https://www.instagram.com/{credentials.account[int(argv[1])][0]}")
     sleep(5)
@@ -319,8 +243,6 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
 
 
 def sendStory():
-    if checkForCrashed == "crash":
-        return
     driver.get("https://www.instagram.com/")
     sleep(15)
     driver.find_element(
@@ -339,12 +261,6 @@ def sendStory():
         By.XPATH, '/html/body/div[1]/section/footer/div/div/button').click()
     sleep(60)
     system(f'rm /tmp/{argv[1]}InstaStory.png')
-
-
-def clear():  # will close useless tabs
-    sleep(1)
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
 
 
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
@@ -378,10 +294,9 @@ while True:
                     with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                         data = int(f.read())
                         f.seek(0)
-                        checkForCrashed = CreateImage(
+                        CreateImage(
                             "post", pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
-                        if checkForCrashed != 'crash':
-                            f.write(str(data + 1))
+                        f.write(str(data + 1))
                         f.truncate()
                 else:
                     checkForCrashed = CreateImage(
