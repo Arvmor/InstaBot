@@ -36,15 +36,6 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
     exit(0)
 
 
-def load(filename):
-    f = open(f"./userInputs/{filename}.txt", "r")
-    cPlace = ''
-    for l in f:
-        cPlace += l
-    f.close()
-    return cPlace
-
-
 def login(numberOfAccount):  # Login function
     driver.get('https://www.instagram.com/accounts/logout/')
     sleep(5)
@@ -83,6 +74,8 @@ def follow(username):
 
 
 def CreateImage(mode, text, background, color=None):
+    if text == "failed !":
+        raise Exception("failed to get post")
     # Create a HTML file
     html = """<!DOCTYPE html>
                 <html lang="en">
@@ -177,18 +170,18 @@ def pickPost():
             )
         )
     except:
-        raise Exception("failed to get post")
+        return "failed !"
     postText = driver.find_element(
         By.XPATH, '/html/body/div/div[2]/div[2]').text.strip()
     try:
         if driver.find_element(
                 By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
-            raise Exception("failed to get post")
+            return "failed !"
     except:
         try:
             if driver.find_element(
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
-                raise Exception("failed to get post")
+                return "failed !"
         except:
             newLineCounter = 0
             if pattern == 0:
@@ -215,7 +208,7 @@ def pickPost():
             if len(postText[:-l]) > 10:
                 for s in range(1, len(postText[:-l])):
                     if postText[:-l][-s] == '@':
-                        raise Exception("failed to get post")
+                        return "failed !"
                 return postText[:-l]
 
 
@@ -320,3 +313,4 @@ while True:
         except Exception as excep:
             print(excep)
             driver.quit()
+            break
