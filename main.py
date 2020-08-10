@@ -212,6 +212,8 @@ def pickPost():
             # clean the text
             postText = sub('\n\n+', '<br><br>',
                            postText[:-l].strip()).replace('\n', '<br>')
+            if len(postText) <= 10:
+                return "failed !"
             return postText
 
 
