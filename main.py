@@ -11,6 +11,7 @@ from importlib import reload
 import credentials
 from random import choice
 from sys import argv
+from re import sub
 # functions
 
 
@@ -74,7 +75,7 @@ def follow(username):
 
 
 def CreateImage(mode, text, background, color=None):
-    if text == "failed !":
+    if text == "failed !" or text == None:
         raise Exception("failed to get post")
     # Create a HTML file
     html = """<!DOCTYPE html>
@@ -102,7 +103,7 @@ def CreateImage(mode, text, background, color=None):
                 <body>
                 <div dir="rtl" style="
                         font-family: myFont;
-                        font-size:4vw;
+                        font-size:3vw;
                         margin: 0;
                         position: absolute;
                         top: 50%;
@@ -205,11 +206,13 @@ def pickPost():
                     ch -= 1
                 postText = postText.strip()
             # Filter Text for last time
-            if len(postText[:-l]) > 10:
-                for s in range(1, len(postText[:-l])):
-                    if postText[:-l][-s] == '@':
-                        return "failed !"
-                return postText[:-l].replace("\n", "<br>")
+            for s in range(1, len(postText[:-l])):
+                if postText[:-l][-s] == '@':
+                    return "failed !"
+            # clean the text
+            postText = sub('\n\n+', '<br><br>',
+                           postText[:-l].strip()).replace('\n', '<br>')
+            return postText
 
 
 def sendPost(caption=credentials.captions[int(argv[1])]):
