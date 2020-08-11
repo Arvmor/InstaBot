@@ -142,7 +142,7 @@ def CreateImage(mode, text, background, color=None):
     driver.set_window_size(438, 894)
 
 
-def pickPost():
+def pickPost(oldPost=0):
     # select random Channel
     chosen = choice(credentials.channels[credentials.account[int(argv[1])][2]])
     print(chosen)
@@ -161,7 +161,7 @@ def pickPost():
             postID = postHref[postID:]
             break
     # Find Text Caption
-    driver.get(f"https://t.me/{channel}/{postID}")
+    driver.get(f"https://t.me/{channel}/{int(postID)-oldPost}")
     sleep(10)
     try:
         driver.switch_to.frame(
@@ -267,6 +267,7 @@ TotalRunTime = 10
 runtimehour = 0
 posted = False
 followed = False
+storied = False
 
 # Main code
 while True:
@@ -312,6 +313,27 @@ while True:
                     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
                 driver.quit()
             followed = True
+            # Upload a new Story
+            if not storied:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=chrome_options)
+                CreateImage("story", pickPost(choice(range(1, 6))),
+                            f'./CreateImage/s{argv[1]}.png')
+                driver.quit()
+                chrome_options = webdriver.ChromeOptions()
+                chrome_options.add_argument("--auto-open-devtools-for-tabs")
+                chrome_options.add_argument(
+                    f"user-data-dir=./userInputs/Profile{argv[1]}/")
+                chrome_options.add_argument("--no-sandbox")
+                chrome_options.add_argument("--disable-dev-shm-usage")
+                chrome_options.add_argument("--log-level=3")
+                chrome_options.add_argument("--log-level=OFF")
+                driver = webdriver.Chrome(
+                    "chromedriver", options=chrome_options)
+                login(int(argv[1]))
+                sendStory()
+                driver.quit()
+            storied = True
             # going for the next round
             runtimehour += 1
             if runtimehour == TotalRunTime:
@@ -321,6 +343,7 @@ while True:
             sleep(choice(range(3400, 3800)))
             posted = False
             followed = False
+            storied = False
             reload(credentials)
         except Exception as excep:
             print(excep)
