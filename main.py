@@ -194,6 +194,7 @@ def pickPost(oldPost=0):
                         newLineCounter += 1
                     if newLineCounter == 2:
                         break
+                postText = postText[:-l]
             elif pattern == 1:
                 ch = -24
                 while abs(ch) != len(postText):
@@ -208,12 +209,12 @@ def pickPost(oldPost=0):
                     ch -= 1
                 postText = postText.strip()
             # Filter Text for last time
-            for s in range(1, len(postText[:-l])):
-                if postText[:-l][-s] == '@':
+            for s in range(1, len(postText)):
+                if postText[-s] == '@':
                     return "failed !"
             # clean the text
             postText = sub('\n\n+', '<br><br>',
-                           postText[:-l].strip()).replace('\n', '<br>')
+                           postText.strip()).replace('\n', '<br>')
             if len(postText) <= 10 or len(postText) >= 639:
                 return "failed !"
             return postText
@@ -376,6 +377,11 @@ while True:
             followed = True
             # Upload a new Story
             if not storied:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=chrome_options)
+                CreateImage(
+                    "story", pickPost(), f'./CreateImage/s{argv[1]}.png')
+                driver.quit()
                 # Driver settings
                 chrome_options = webdriver.ChromeOptions()
                 chrome_options.add_argument("--headless")
