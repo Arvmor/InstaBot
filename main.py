@@ -38,6 +38,7 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
 
 
 def login(numberOfAccount):  # Login function
+    global sessionId
     driver.get('https://www.instagram.com/accounts/logout/')
     sleep(5)
     driver.get('https://www.instagram.com/accounts/login/')
@@ -49,6 +50,7 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
     sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
+    sessionId = driver.get_cookies()[6]
 
 
 def follow(username):
@@ -212,7 +214,7 @@ def pickPost(oldPost=0):
             # clean the text
             postText = sub('\n\n+', '<br><br>',
                            postText[:-l].strip()).replace('\n', '<br>')
-            if len(postText) <= 10:
+            if len(postText) <= 10 or len(postText) >= 639:
                 return "failed !"
             return postText
 
@@ -235,6 +237,7 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
+    print("Uploaded Post")
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
 
@@ -259,12 +262,85 @@ def sendStory():
     system(f'rm /tmp/{argv[1]}InstaStory.png')
 
 
+def storyWebsite():
+    # create email
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    emailAddress = ''
+    for _ in range(16):
+        emailAddress += choice(alphabet)
+    driver.get("https://www.moakt.com/")
+    print(f"Creating Email {emailAddress}@moakt.cc")
+    sleep(10)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/span[3]/input').send_keys(emailAddress)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/input[2]').click()
+    sleep(5)
+    # Sign up
+    driver.execute_script("window.open('');")
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get("https://app.storrito.com/#/login")
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div[2]/button').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div/input').send_keys(emailAddress+"@moakt.cc")
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/button').click()
+    # Get verify link
+    driver.switch_to.window(driver.window_handles[0])
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[1]/a[2]').click()
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a').click()
+    sleep(2)
+    driver.switch_to.frame(
+        driver.find_element(
+            By.XPATH,
+            "/html/body/div/div[1]/div[2]/div/div[3]/div[2]/iframe",
+        )
+    )
+    driver.find_element(
+        By.XPATH, '/html/body/div/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td/span/a').click()
+    # add Instagram account
+    sleep(5)
+    driver.get("https://app.storrito.com/#/instagram/connect")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
+    sleep(1)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
+    # upload story image
+    driver.get("https://app.storrito.com/#/gallery")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+    sleep(10)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
+    print("Uploaded Story")
+
+
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 chromedriver = "chromedriver.exe"
 TotalRunTime = 10
 runtimehour = 0
+sessionId = ''
 posted = False
 followed = False
 storied = False
@@ -317,21 +393,7 @@ while True:
             if not storied:
                 driver = webdriver.Chrome(
                     "chromedriver", options=chrome_options)
-                CreateImage("story", pickPost(choice(range(1, 6))),
-                            f'./CreateImage/s{argv[1]}.png')
-                driver.quit()
-                chrome_options = webdriver.ChromeOptions()
-                chrome_options.add_argument("--auto-open-devtools-for-tabs")
-                chrome_options.add_argument(
-                    f"user-data-dir=./userInputs/Profile{argv[1]}/")
-                chrome_options.add_argument("--no-sandbox")
-                chrome_options.add_argument("--disable-dev-shm-usage")
-                chrome_options.add_argument("--log-level=3")
-                chrome_options.add_argument("--log-level=OFF")
-                driver = webdriver.Chrome(
-                    "chromedriver", options=chrome_options)
-                login(int(argv[1]))
-                sendStory()
+                storyWebsite()
                 driver.quit()
             storied = True
             # going for the next round
