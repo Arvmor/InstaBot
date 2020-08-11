@@ -263,9 +263,10 @@ signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 chromedriver = "chromedriver.exe"
-TotalRunTime = 15
+TotalRunTime = 10
 runtimehour = 0
 posted = False
+followed = False
 
 # Main code
 while True:
@@ -303,20 +304,23 @@ while True:
                 driver.quit()
             posted = True
             # Follow few pages
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
-            login(int(argv[1]))
-            follow(
-                choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
-            driver.quit()
-            sleep(5)
+            if not followed:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=chrome_options)
+                login(int(argv[1]))
+                follow(
+                    choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+                driver.quit()
+            followed = True
             # going for the next round
             runtimehour += 1
             if runtimehour == TotalRunTime:
                 break
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             # here you can set the delay time
-            sleep(choice(range(2260, 2530)))
+            sleep(choice(range(3400, 3800)))
             posted = False
+            followed = False
             reload(credentials)
         except Exception as excep:
             print(excep)
