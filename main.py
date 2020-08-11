@@ -343,9 +343,10 @@ while True:
                 "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
             chrome_options.add_argument("--log-level=3")
             chrome_options.add_argument("--log-level=OFF")
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Create Image for post
             if not posted:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=chrome_options)
                 if credentials.account[int(argv[1])][3] == 1:
                     with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                         data = int(f.read())
@@ -373,6 +374,13 @@ while True:
             followed = True
             # Upload a new Story
             if not storied:
+                # Driver settings
+                chrome_options = webdriver.ChromeOptions()
+                chrome_options.add_argument("--headless")
+                chrome_options.add_argument("--no-sandbox")
+                chrome_options.add_argument("--disable-dev-shm-usage")
+                chrome_options.add_argument("--log-level=3")
+                chrome_options.add_argument("--log-level=OFF")
                 driver = webdriver.Chrome(
                     "chromedriver", options=chrome_options)
                 storyWebsite()
