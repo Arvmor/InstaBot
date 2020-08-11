@@ -50,7 +50,7 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
     sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
-    sessionId = driver.get_cookies()[6]
+    sessionId = driver.get_cookies()[6]['value']
 
 
 def follow(username):
@@ -269,7 +269,7 @@ def storyWebsite():
     sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/button').click()
-    sleep(60)
+    sleep(30)
     # Get verify link
     driver.switch_to.window(driver.window_handles[0])
     sleep(2)
@@ -289,27 +289,29 @@ def storyWebsite():
         By.XPATH, '/html/body/div/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td/span/a').click()
     # add Instagram account
     sleep(5)
+    driver.switch_to.window(driver.window_handles[2])
     driver.get("https://app.storrito.com/#/instagram/connect")
-    sleep(5)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
-    sleep(1)
+    sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
     # upload story image
     driver.get("https://app.storrito.com/#/gallery")
-    sleep(5)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
-    sleep(2)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
-    sleep(2)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
     print("Uploaded Story")
