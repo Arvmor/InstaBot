@@ -295,8 +295,7 @@ def storyWebsite():
     driver.find_element(
         By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[1]/a[2]').click()
     sleep(2)
-    driver.find_element(
-        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a').click()
+    driver.find_element_by_link_text("Activate your Storrito account").click()
     sleep(2)
     driver.switch_to.frame(
         driver.find_element(
