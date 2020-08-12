@@ -295,7 +295,7 @@ def storyWebsite():
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
-    sleep(5)
+    sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
     sleep(10)
@@ -306,7 +306,7 @@ def storyWebsite():
     sleep(10)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
-    sleep(10)
+    sleep(60)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
     sleep(10)
@@ -387,6 +387,10 @@ while True:
                 chrome_options.add_argument("--headless")
                 chrome_options.add_argument("--no-sandbox")
                 chrome_options.add_argument("--disable-dev-shm-usage")
+                chrome_options.add_argument("--window-size=1920,1080")
+                chrome_options.add_argument("--disable-extentions")
+                chrome_options.add_argument("--start-maximized")
+                chrome_options.add_argument("--ignore-certificate-errors")
                 chrome_options.add_argument("--log-level=3")
                 chrome_options.add_argument("--log-level=OFF")
                 driver = webdriver.Chrome(
