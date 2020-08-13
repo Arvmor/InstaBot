@@ -292,7 +292,7 @@ def storyWebsite():
     sleep(5)
     driver.switch_to.window(driver.window_handles[2])
     driver.get("https://app.storrito.com/#/instagram/connect")
-    sleep(10)
+    sleep(20)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
     sleep(10)
@@ -303,13 +303,13 @@ def storyWebsite():
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
     # upload story image
     driver.get("https://app.storrito.com/#/gallery")
-    sleep(10)
+    sleep(20)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
     sleep(60)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
-    sleep(10)
+    sleep(20)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
     sleep(10)
