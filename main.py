@@ -218,12 +218,12 @@ def pickPost(oldPost=0):
             if len(postText) <= 10 or len(postText) >= 500:
                 return "failed !"
             # check if text is already posted
-            textFile = open("text.txt", '+r')
+            textFile = open(f"text{argv[1]}.txt", '+r')
             txtFile = textFile.read()
             textFile.close()
             if postText == txtFile:
                 return "failed !"
-            textFile = open("text.txt", '+w')
+            textFile = open(f"text{argv[1]}.txt", '+w')
             textFile.write(postText)
             textFile.close()
             return postText
