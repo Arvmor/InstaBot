@@ -294,27 +294,27 @@ def storyWebsite():
     driver.get("https://app.storrito.com/#/instagram/connect")
     sleep(20)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
+        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
+        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
+        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/form/button[1]').click()
     # upload story image
     driver.get("https://app.storrito.com/#/gallery")
     sleep(20)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
     sleep(60)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
+        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
     sleep(20)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
+        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
+        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
     print("Uploaded Story")
     system(f'rm /tmp/{argv[1]}InstaStory.png')
 
