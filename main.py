@@ -215,7 +215,7 @@ def pickPost(oldPost=0):
             # clean the text
             postText = sub('\n\n+', '<br><br>',
                            postText.strip()).replace('\n', '<br>')
-            if len(postText) <= 10 or len(postText) >= 639:
+            if len(postText) <= 10 or len(postText) >= 500:
                 return "failed !"
             return postText
 
@@ -294,27 +294,35 @@ def storyWebsite():
     driver.get("https://app.storrito.com/#/instagram/connect")
     sleep(20)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
+    sleep(10)
+    for char in sessionId:
+        driver.find_element(
+            By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(char)
+        sleep(choice(range(1, 5)))
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/form/div/input').send_keys(sessionId)
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/form/button[1]').click()
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div[2]/button').click()
     # upload story image
     driver.get("https://app.storrito.com/#/gallery")
     sleep(20)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
     sleep(60)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
     sleep(20)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '//*[@id="app"]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
+        By.XPATH, f'/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/div/select/option[text()="{credentials.account[int(argv[1])][0]}"]').click()
+    sleep(10)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
+    sleep(10)
     print("Uploaded Story")
     system(f'rm /tmp/{argv[1]}InstaStory.png')
 
