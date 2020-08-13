@@ -217,6 +217,15 @@ def pickPost(oldPost=0):
                            postText.strip()).replace('\n', '<br>')
             if len(postText) <= 10 or len(postText) >= 500:
                 return "failed !"
+            # check if text is already posted
+            textFile = open("text.txt", '+r')
+            txtFile = textFile.read()
+            textFile.close()
+            if postText == txtFile:
+                return "failed !"
+            textFile = open("text.txt", '+w')
+            textFile.write(postText)
+            textFile.close()
             return postText
 
 
