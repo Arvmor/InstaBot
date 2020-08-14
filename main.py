@@ -52,7 +52,7 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
     sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
-    sessionId = driver.get_cookies()[6]['value']
+    sessionId = driver.get_cookies()[4]['value']
 
 
 def follow(username):
@@ -301,12 +301,10 @@ def storyWebsite():
         By.XPATH, '/html/body/div/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td/span/a').click()
     # add Instagram account
     driver.switch_to.window(driver.window_handles[2])
-    sleep(20)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/aside/div/div[1]/a[5]/div').click()
-    sleep(20)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[2]/div/aside/div/div[1]/a[5]/div'))).click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]'))).click()
     sleep(10)
     for char in sessionId:
         driver.find_element(
@@ -314,9 +312,8 @@ def storyWebsite():
         sleep(choice(range(1, 5)))
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[1]/div/div[2]/button').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[1]/div/div[2]/button'))).click()
     # upload story image
     driver.get("https://app.storrito.com/#/gallery")
     sleep(20)
@@ -325,9 +322,8 @@ def storyWebsite():
     sleep(60)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
-    sleep(20)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button'))).click()
     sleep(10)
     driver.find_element(
         By.XPATH, f'/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/div/select/option[text()="{credentials.account[int(argv[1])][0]}"]').click()
