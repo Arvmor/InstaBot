@@ -298,9 +298,10 @@ def storyWebsite():
     driver.find_element(
         By.XPATH, '/html/body/div/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td/span/a').click()
     # add Instagram account
-    sleep(5)
     driver.switch_to.window(driver.window_handles[2])
-    driver.get("https://app.storrito.com/#/instagram/connect")
+    sleep(20)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/aside/div/div[1]/a[5]/div').click()
     sleep(20)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]').click()
@@ -392,15 +393,6 @@ while True:
                 sendPost()
                 driver.quit()
             posted = True
-            # Follow few pages
-            if not followed:
-                driver = webdriver.Chrome(
-                    "chromedriver", options=headlessChrome)
-                login(int(argv[1]))
-                follow(
-                    choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
-                driver.quit()
-            followed = True
             # Upload a new Story
             if not storied:
                 driver = webdriver.Chrome(
@@ -413,6 +405,15 @@ while True:
                 storyWebsite()
                 driver.quit()
             storied = True
+            # Follow few pages
+            if not followed:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=headlessChrome)
+                login(int(argv[1]))
+                follow(
+                    choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+                driver.quit()
+            followed = True
             # going for the next round
             runtimehour += 1
             if runtimehour == TotalRunTime:
