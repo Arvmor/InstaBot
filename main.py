@@ -332,12 +332,9 @@ def storyWebsite():
     driver.find_element(
         By.XPATH, f'/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/div/select/option[text()="{credentials.account[int(argv[1])][0]}"]').click()
     sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/nav/div/div/div/button[1]').click()
-    sleep(10)
-    btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
-        (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button')))
-    btn.click()
+    btn = driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button')
+    driver.execute_script("arguments[0].click();", btn)
     sleep(20)
     print("Uploaded Story")
     system(f'rm /tmp/{argv[1]}InstaStory.png')
@@ -362,7 +359,7 @@ headlessChrome.add_argument(
 headlessChrome.add_argument("--log-level=3")
 headlessChrome.add_argument("--log-level=OFF")
 noneHeadlessChrome = webdriver.ChromeOptions()
-noneHeadlessChrome.add_argument("--headless")
+# noneHeadlessChrome.add_argument("--headless")
 noneHeadlessChrome.add_argument("--no-sandbox")
 noneHeadlessChrome.add_argument("--disable-dev-shm-usage")
 noneHeadlessChrome.add_argument("--window-size=1920,1080")
