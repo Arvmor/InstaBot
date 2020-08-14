@@ -346,6 +346,24 @@ sessionId = ''
 posted = False
 followed = False
 storied = False
+headlessChrome = webdriver.ChromeOptions()
+headlessChrome.add_argument("--headless")
+headlessChrome.add_argument("--no-sandbox")
+headlessChrome.add_argument("--disable-dev-shm-usage")
+headlessChrome.add_argument(
+    "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
+headlessChrome.add_argument("--log-level=3")
+headlessChrome.add_argument("--log-level=OFF")
+noneHeadlessChrome = webdriver.ChromeOptions()
+noneHeadlessChrome.add_argument("--headless")
+noneHeadlessChrome.add_argument("--no-sandbox")
+noneHeadlessChrome.add_argument("--disable-dev-shm-usage")
+noneHeadlessChrome.add_argument("--window-size=1920,1080")
+noneHeadlessChrome.add_argument("--disable-extentions")
+noneHeadlessChrome.add_argument("--start-maximized")
+noneHeadlessChrome.add_argument("--ignore-certificate-errors")
+noneHeadlessChrome.add_argument("--log-level=3")
+noneHeadlessChrome.add_argument("--log-level=OFF")
 
 # Main code
 while True:
@@ -354,19 +372,10 @@ while True:
         sleep(choice(range(50000, 50800)))
     while True:
         try:
-            # Driver settings
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument(
-                "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
-            chrome_options.add_argument("--log-level=3")
-            chrome_options.add_argument("--log-level=OFF")
             # Create Image for post
             if not posted:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=chrome_options)
+                    "chromedriver", options=headlessChrome)
                 if credentials.account[int(argv[1])][3] == 1:
                     with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                         data = int(f.read())
@@ -386,7 +395,7 @@ while True:
             # Follow few pages
             if not followed:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=chrome_options)
+                    "chromedriver", options=headlessChrome)
                 login(int(argv[1]))
                 follow(
                     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
@@ -395,23 +404,12 @@ while True:
             # Upload a new Story
             if not storied:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=chrome_options)
+                    "chromedriver", options=headlessChrome)
                 CreateImage(
                     "story", pickPost(), f'./CreateImage/s{argv[1]}.png')
                 driver.quit()
-                # Driver settings
-                chrome_options = webdriver.ChromeOptions()
-                chrome_options.add_argument("--headless")
-                chrome_options.add_argument("--no-sandbox")
-                chrome_options.add_argument("--disable-dev-shm-usage")
-                chrome_options.add_argument("--window-size=1920,1080")
-                chrome_options.add_argument("--disable-extentions")
-                chrome_options.add_argument("--start-maximized")
-                chrome_options.add_argument("--ignore-certificate-errors")
-                chrome_options.add_argument("--log-level=3")
-                chrome_options.add_argument("--log-level=OFF")
                 driver = webdriver.Chrome(
-                    "chromedriver", options=chrome_options)
+                    "chromedriver", options=noneHeadlessChrome)
                 storyWebsite()
                 driver.quit()
             storied = True
