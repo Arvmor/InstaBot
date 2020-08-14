@@ -3,6 +3,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from signal import signal, SIGINT
 from time import sleep
@@ -331,8 +333,12 @@ def storyWebsite():
         By.XPATH, f'/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/div/select/option[text()="{credentials.account[int(argv[1])][0]}"]').click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button').click()
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/nav/div/div/div/button[1]').click()
     sleep(10)
+    btn = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button')))
+    btn.click()
+    sleep(20)
     print("Uploaded Story")
     system(f'rm /tmp/{argv[1]}InstaStory.png')
 
