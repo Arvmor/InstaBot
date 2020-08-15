@@ -146,7 +146,7 @@ def CreateImage(mode, text, background, color=None):
     driver.set_window_size(438, 894)
 
 
-def pickPost(oldPost=0):
+def pickPost():
     # select random Channel
     chosen = choice(credentials.channels[credentials.account[int(argv[1])][2]])
     print(chosen)
@@ -165,7 +165,8 @@ def pickPost(oldPost=0):
             postID = postHref[postID:]
             break
     # Find Text Caption
-    driver.get(f"https://t.me/{channel}/{int(postID)-oldPost}")
+    driver.get(
+        f"https://t.me/{channel}/{choice(range(int(postID)-10000,int(postID)))}")
     sleep(10)
     try:
         driver.switch_to.frame(
@@ -210,10 +211,6 @@ def pickPost(oldPost=0):
                         postText = postText[:ch]
                     ch -= 1
                 postText = postText.strip()
-            # Filter Text for last time
-            for s in range(1, len(postText)):
-                if postText[-s] == '@':
-                    return "failed !"
             # clean the text
             postText = sub('\n\n+', '<br><br>',
                            postText.strip()).replace('\n', '<br>')
@@ -228,6 +225,10 @@ def pickPost(oldPost=0):
             textFile = open(f"text{argv[1]}.txt", '+w')
             textFile.write(postText)
             textFile.close()
+            # Filter Text for last time
+            for character in postText:
+                if character == '@':
+                    return "failed !"
             return postText
 
 
