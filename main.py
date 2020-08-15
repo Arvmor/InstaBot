@@ -52,7 +52,13 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
     sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
-    sessionId = driver.get_cookies()[4]['value']
+    # Get session id
+    cookies = driver.get_cookies()
+    for row in cookies:
+        if row['name'] == 'sessionid':
+            sessionId = row['value']
+            break
+    print(sessionId)
 
 
 def follow(username):
