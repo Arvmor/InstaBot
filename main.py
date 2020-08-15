@@ -3,6 +3,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from signal import signal, SIGINT
 from time import sleep
@@ -11,6 +13,7 @@ from importlib import reload
 import credentials
 from random import choice
 from sys import argv
+from re import sub
 # functions
 
 
@@ -36,16 +39,8 @@ def signal_handler(signal, frame):  # Handle Ctrl-C
     exit(0)
 
 
-def load(filename):
-    f = open(f"./userInputs/{filename}.txt", "r")
-    cPlace = ''
-    for l in f:
-        cPlace += l
-    f.close()
-    return cPlace
-
-
 def login(numberOfAccount):  # Login function
+    global sessionId
     driver.get('https://www.instagram.com/accounts/logout/')
     sleep(5)
     driver.get('https://www.instagram.com/accounts/login/')
@@ -57,77 +52,22 @@ def login(numberOfAccount):  # Login function
         By.NAME, 'password').send_keys(credentials.account[numberOfAccount][1], Keys.RETURN)
     sleep(10)
     print(f"Logged in with {credentials.account[numberOfAccount][0]}")
-
-
-def sendComment(commentText, postURL):  # Send Comments
-    driver.get(postURL)
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/textarea').send_keys(commentText)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[3]/div/form/button').click()
-    print(f"Commented {commentText} on this post {postURL}")
-    sleep(10)
-
-
-def sendLike(postURL=None, samePost=False):  # Like the post
-    if samePost == False:
-        driver.get(postURL)
-    sleep(10)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/span[1]/button').click()
-    print(f"liked this post {postURL}")
-    sleep(5)
-
-
-def sendReplay(postURL=None, samePost=False, commentNumber=1, commentText="GJ !"):
-    if samePost == False:
-        driver.get(postURL)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').location_once_scrolled_into_view()
-    driver.find_element(
-        By.XPATH, f'/html/body/div[1]/section/main/div/div[1]/article/div[3]/div[1]/ul/ul[{commentNumber}]/div/li/div/div[1]/div[2]/div/div/button').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/textarea').send_keys(commentText)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[2]/section[3]/div/form/button').click()
-    print(f"Replayed to this post {postURL}")
-    sleep(5)
-
-
-def forwardPost(postURL=None, samePost=False, username=None):
-    if samePost == False:
-        driver.get(postURL)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/button').click()
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[4]/div/div/div/div[2]/div/div[1]/div/div/div[2]').click()
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[1]/div/div[2]/input').send_keys(username)
-    sleep(3)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[2]/div[2]/div[1]/div').click()
-    sleep(1)
-    driver.find_element(
-        By.XPATH, '/html/body/div[5]/div/div/div[1]/div/div[2]/div/button').click()
+    # Get session id
+    cookies = driver.get_cookies()
+    for row in cookies:
+        if row['name'] == 'sessionid':
+            sessionId = row['value']
+            break
+    print(sessionId)
 
 
 def follow(username):
     errors = 0
     driver.get(f"https://www.instagram.com/{username}/")
+    print(f"Going for follow {username}")
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/header/section/ul/li[2]/a').click()
+        By.XPATH, '/html/body/div[1]/section/main/div/header/section/ul/li[2]').click()
     sleep(5)
     for i in range(2, 16):
         try:
@@ -142,23 +82,25 @@ def follow(username):
                 driver.find_element(
                     By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]').click()
                 sleep(4)
-
-
-def unfollow(username):
-    driver.get(f"https://www.instagram.com/{username}/")
     sleep(5)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/main/div/header/section/div[1]/div[2]/span/span[1]/button').click()
-    sleep(2)
-    driver.find_element(
-        By.XPATH, '/html/body/div[4]/div/div/div/div[3]/button[1]').click()
-    sleep(5)
+    for i in range(1, 16):
+        try:
+            driver.find_element(
+                By.XPATH, f'/html/body/div[4]/div/div/div[2]/ul/div/li[{i}]/div/div[3]/button').click()
+            sleep(3)
+        except:
+            errors += 1
+            if errors >= 8:
+                break
+            if driver.find_elements(By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]'):
+                driver.find_element(
+                    By.XPATH, '/html/body/div[5]/div/div/div/div[3]/button[2]').click()
+                sleep(4)
 
 
 def CreateImage(mode, text, background, color=None):
-    if text == None:
-        print("Crash")
-        return "crash"
+    if text == "failed !" or text == None:
+        raise Exception("failed to get post")
     # Create a HTML file
     html = """<!DOCTYPE html>
                 <html lang="en">
@@ -183,9 +125,9 @@ def CreateImage(mode, text, background, color=None):
                         </style>
                 </head>
                 <body>
-                <div style="
+                <div dir="rtl" style="
                         font-family: myFont;
-                        font-size:4vw;
+                        font-size:3vw;
                         margin: 0;
                         position: absolute;
                         top: 50%;
@@ -243,7 +185,8 @@ def pickPost():
             postID = postHref[postID:]
             break
     # Find Text Caption
-    driver.get(f"https://t.me/{channel}/{postID}")
+    driver.get(
+        f"https://t.me/{channel}/{choice(range(int(postID)-10000,int(postID)))}")
     sleep(10)
     try:
         driver.switch_to.frame(
@@ -253,18 +196,18 @@ def pickPost():
             )
         )
     except:
-        return
+        return "failed !"
     postText = driver.find_element(
         By.XPATH, '/html/body/div/div[2]/div[2]').text.strip()
     try:
         if driver.find_element(
                 By.XPATH, '/html/body/div/div[2]/a/div[1]/video'):
-            return
+            return "failed !"
     except:
         try:
             if driver.find_element(
                     By.XPATH, '/html/body/div/div[2]/a').get_attribute("style")[37:-3] != '':
-                return
+                return "failed !"
         except:
             newLineCounter = 0
             if pattern == 0:
@@ -274,6 +217,7 @@ def pickPost():
                         newLineCounter += 1
                     if newLineCounter == 2:
                         break
+                postText = postText[:-l]
             elif pattern == 1:
                 ch = -24
                 while abs(ch) != len(postText):
@@ -287,17 +231,28 @@ def pickPost():
                         postText = postText[:ch]
                     ch -= 1
                 postText = postText.strip()
+            # clean the text
+            postText = sub('\n\n+', '<br><br>',
+                           postText.strip()).replace('\n', '<br>')
+            if len(postText) <= 10 or len(postText) >= 500:
+                return "failed !"
+            # check if text is already posted
+            textFile = open(f"text{argv[1]}.txt", '+r')
+            txtFile = textFile.read()
+            textFile.close()
+            if postText == txtFile:
+                return "failed !"
+            textFile = open(f"text{argv[1]}.txt", '+w')
+            textFile.write(postText)
+            textFile.close()
             # Filter Text for last time
-            if len(postText[:-l]) > 10:
-                for s in range(1, len(postText[:-l])):
-                    if postText[:-l][-s] == '@':
-                        return
-                return postText[:-l]
+            for character in postText:
+                if character == '@':
+                    return "failed !"
+            return postText
 
 
 def sendPost(caption=credentials.captions[int(argv[1])]):
-    if checkForCrashed == "crash":
-        return
     driver.get(
         f"https://www.instagram.com/{credentials.account[int(argv[1])][0]}")
     sleep(5)
@@ -315,46 +270,121 @@ def sendPost(caption=credentials.captions[int(argv[1])]):
     driver.find_element(
         By.XPATH, '//*[@id="react-root"]/section/div[1]/header/div/div[2]/button').click()
     sleep(60)
+    print("Uploaded Post")
     system(f'rm /tmp/{argv[1]}InstaImage.png')
 
 
-def sendStory():
-    if checkForCrashed == "crash":
-        return
-    driver.get("https://www.instagram.com/")
-    sleep(15)
+def storyWebsite():
+    # create email
+    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    emailAddress = ''
+    for _ in range(16):
+        emailAddress += choice(alphabet)
+    driver.get("https://www.moakt.com/")
+    print(f"Creating Email {emailAddress}@moakt.cc")
+    sleep(5)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/nav[1]/div/div/header/div/div[1]/button').click()
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/span[3]/input').send_keys(emailAddress)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/input[2]').click()
+    sleep(5)
+    # Sign up
+    driver.execute_script("window.open('');")
+    driver.switch_to.window(driver.window_handles[1])
+    driver.get("https://app.storrito.com/#/login")
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div[2]/button').click()
     sleep(1)
-    try:
-        if driver.find_element(By.XPATH, '/html/body/div[4]/div/div[2]/div/div[5]/button'):
-            driver.find_element(
-                By.XPATH, '/html/body/div[4]/div/div[2]/div/div[5]/button').click()
-    except:
-        pass
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/nav[1]/div/div/form/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div/input').send_keys(f"{emailAddress}@moakt.cc")
+    sleep(5)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/button').click()
+    sleep(30)
+    # Get verify link
+    driver.switch_to.window(driver.window_handles[0])
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[1]/a[2]').click()
+    sleep(2)
+    driver.find_element(
+        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a').click()
+    sleep(2)
+    driver.switch_to.frame(
+        driver.find_element(
+            By.XPATH,
+            "/html/body/div/div[1]/div[2]/div/div[3]/div[2]/iframe",
+        )
+    )
+    driver.find_element(
+        By.XPATH, '/html/body/div/table/tbody/tr[2]/td/table/tbody/tr/td/div/table/tbody/tr/td/span/a').click()
+    # add Instagram account
+    driver.switch_to.window(driver.window_handles[2])
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[2]/div/aside/div/div[1]/a[5]/div'))).click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[1]/button[2]'))).click()
+    sleep(10)
+    for char in sessionId:
+        driver.find_element(
+            By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/div/input').send_keys(char)
+        sleep(choice(range(1, 5)))
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[1]/div/div/form/button[1]').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[1]/div/div[2]/button'))).click()
+    # upload story image
+    driver.get("https://app.storrito.com/#/gallery")
+    sleep(20)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[1]/div[1]/div[1]/div/input').send_keys(f'/tmp/{argv[1]}InstaStory.png')
+    sleep(60)
+    driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div[2]/div/div/div/div[1]/img').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[1]/div/div/div[1]/div[2]/div[1]/div/button'))).click()
     sleep(10)
     driver.find_element(
-        By.XPATH, '/html/body/div[1]/section/footer/div/div/button').click()
-    sleep(60)
+        By.XPATH, f'/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[1]/div/div/select/option[text()="{credentials.account[int(argv[1])][0]}"]').click()
+    sleep(10)
+    btn = driver.find_element(
+        By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div/div[2]/div/div[1]/div[3]/div/div/button')
+    driver.execute_script("arguments[0].click();", btn)
+    sleep(20)
+    print("Uploaded Story")
     system(f'rm /tmp/{argv[1]}InstaStory.png')
-
-
-def clear():  # will close useless tabs
-    sleep(1)
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
 
 
 signal(SIGINT, signal_handler)  # Handle Ctrl-C
 
 # Variables
 chromedriver = "chromedriver.exe"
-TotalRunTime = 15
+TotalRunTime = 10
 runtimehour = 0
+sessionId = ''
 posted = False
+followed = False
 storied = False
+mobileChrome = webdriver.ChromeOptions()
+mobileChrome.add_argument("--headless")
+mobileChrome.add_argument("--no-sandbox")
+mobileChrome.add_argument("--disable-dev-shm-usage")
+mobileChrome.add_argument(
+    "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
+mobileChrome.add_argument("--log-level=3")
+mobileChrome.add_argument("--log-level=OFF")
+noneMobileChrome = webdriver.ChromeOptions()
+noneMobileChrome.add_argument("--headless")
+noneMobileChrome.add_argument("--no-sandbox")
+noneMobileChrome.add_argument("--disable-dev-shm-usage")
+noneMobileChrome.add_argument("--window-size=1920,1080")
+noneMobileChrome.add_argument("--disable-extentions")
+noneMobileChrome.add_argument("--start-maximized")
+noneMobileChrome.add_argument("--ignore-certificate-errors")
+noneMobileChrome.add_argument("--log-level=3")
+noneMobileChrome.add_argument("--log-level=OFF")
 
 # Main code
 while True:
@@ -363,62 +393,59 @@ while True:
         sleep(choice(range(50000, 50800)))
     while True:
         try:
-            # Driver settings
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
-            chrome_options.add_argument("--log-level=3")
-            chrome_options.add_argument("--log-level=OFF")
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
             # Create Image for post
             if not posted:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=mobileChrome)
                 if credentials.account[int(argv[1])][3] == 1:
                     with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                         data = int(f.read())
                         f.seek(0)
-                        checkForCrashed = CreateImage("post", pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
-                        if checkForCrashed != 'crash':
-                            f.write(str(data + 1))
+                        CreateImage(
+                            "post", pickPost(), f'./CreateImage/{argv[1]}-{data%2}.png', data % 2)
+                        f.write(str(data + 1))
                         f.truncate()
                 else:
-                    checkForCrashed = CreateImage("post", pickPost(), f'./CreateImage/{argv[1]}.png')
+                    CreateImage(
+                        "post", pickPost(), f'./CreateImage/{argv[1]}.png')
                 # Upload the created image
                 login(int(argv[1]))
                 sendPost()
+                driver.quit()
             posted = True
-            # Follow few pages
-            follow(choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
-            driver.quit()
-            sleep(5)
-            # Change To non-headless for somereason
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("--auto-open-devtools-for-tabs")
-            chrome_options.add_argument(f"user-data-dir=./userInputs/Profile{argv[1]}/")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--log-level=3")
-            chrome_options.add_argument("--log-level=OFF")
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
-            # Create Image for story
+            # Upload a new Story
             if not storied:
-                checkForCrashed = CreateImage("story", pickPost(), f'./CreateImage/s{argv[1]}.png')
-                login(int(argv[1]))
-                sendStory()
+                driver = webdriver.Chrome(
+                    "chromedriver", options=mobileChrome)
+                CreateImage(
+                    "story", pickPost(), f'./CreateImage/s{argv[1]}.png')
+                driver.quit()
+                driver = webdriver.Chrome(
+                    "chromedriver", options=noneMobileChrome)
+                storyWebsite()
                 driver.quit()
             storied = True
+            # Follow few pages
+            if not followed:
+                driver = webdriver.Chrome(
+                    "chromedriver", options=mobileChrome)
+                login(int(argv[1]))
+                follow(
+                    choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
+                driver.quit()
+            followed = True
             # going for the next round
             runtimehour += 1
             if runtimehour == TotalRunTime:
                 break
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             # here you can set the delay time
-            sleep(choice(range(2260, 2530)))
+            sleep(choice(range(3400, 3800)))
             posted = False
+            followed = False
             storied = False
             reload(credentials)
-            driver = webdriver.Chrome("chromedriver", options=chrome_options)
         except Exception as excep:
             print(excep)
             driver.quit()
+            break
