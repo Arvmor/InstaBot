@@ -353,24 +353,24 @@ sessionId = ''
 posted = False
 followed = False
 storied = False
-headlessChrome = webdriver.ChromeOptions()
-headlessChrome.add_argument("--headless")
-headlessChrome.add_argument("--no-sandbox")
-headlessChrome.add_argument("--disable-dev-shm-usage")
-headlessChrome.add_argument(
+mobileChrome = webdriver.ChromeOptions()
+mobileChrome.add_argument("--headless")
+mobileChrome.add_argument("--no-sandbox")
+mobileChrome.add_argument("--disable-dev-shm-usage")
+mobileChrome.add_argument(
     "--user-agent=Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
-headlessChrome.add_argument("--log-level=3")
-headlessChrome.add_argument("--log-level=OFF")
-noneHeadlessChrome = webdriver.ChromeOptions()
-# noneHeadlessChrome.add_argument("--headless")
-noneHeadlessChrome.add_argument("--no-sandbox")
-noneHeadlessChrome.add_argument("--disable-dev-shm-usage")
-noneHeadlessChrome.add_argument("--window-size=1920,1080")
-noneHeadlessChrome.add_argument("--disable-extentions")
-noneHeadlessChrome.add_argument("--start-maximized")
-noneHeadlessChrome.add_argument("--ignore-certificate-errors")
-noneHeadlessChrome.add_argument("--log-level=3")
-noneHeadlessChrome.add_argument("--log-level=OFF")
+mobileChrome.add_argument("--log-level=3")
+mobileChrome.add_argument("--log-level=OFF")
+noneMobileChrome = webdriver.ChromeOptions()
+noneMobileChrome.add_argument("--headless")
+noneMobileChrome.add_argument("--no-sandbox")
+noneMobileChrome.add_argument("--disable-dev-shm-usage")
+noneMobileChrome.add_argument("--window-size=1920,1080")
+noneMobileChrome.add_argument("--disable-extentions")
+noneMobileChrome.add_argument("--start-maximized")
+noneMobileChrome.add_argument("--ignore-certificate-errors")
+noneMobileChrome.add_argument("--log-level=3")
+noneMobileChrome.add_argument("--log-level=OFF")
 
 # Main code
 while True:
@@ -382,7 +382,7 @@ while True:
             # Create Image for post
             if not posted:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=headlessChrome)
+                    "chromedriver", options=mobileChrome)
                 if credentials.account[int(argv[1])][3] == 1:
                     with open(f"./userInputs/bgUser{argv[1]}.txt", "r+") as f:
                         data = int(f.read())
@@ -402,19 +402,19 @@ while True:
             # Upload a new Story
             if not storied:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=headlessChrome)
+                    "chromedriver", options=mobileChrome)
                 CreateImage(
                     "story", pickPost(), f'./CreateImage/s{argv[1]}.png')
                 driver.quit()
                 driver = webdriver.Chrome(
-                    "chromedriver", options=noneHeadlessChrome)
+                    "chromedriver", options=noneMobileChrome)
                 storyWebsite()
                 driver.quit()
             storied = True
             # Follow few pages
             if not followed:
                 driver = webdriver.Chrome(
-                    "chromedriver", options=headlessChrome)
+                    "chromedriver", options=mobileChrome)
                 login(int(argv[1]))
                 follow(
                     choice(credentials.followSource[credentials.account[int(argv[1])][2]]))
