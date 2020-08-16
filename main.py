@@ -120,7 +120,8 @@ def CreateImage(mode, text, background, color=None):
                         left: 50%;
                         -ms-transform: translate(-50%, -50%);
                         transform: translate(-50%, -50%);
-                        text-align: center;"""
+                        text-align: center;
+                        min-width: 500px;"""
     if mode == "post":
         if color != None:
             html += f"""color: {credentials.account[int(argv[1])][4][color]};">"""
@@ -220,17 +221,8 @@ def pickPost():
             # clean the text
             postText = sub('\n\n+', '<br><br>',
                            postText.strip()).replace('\n', '<br>')
-            if len(postText) <= 10 or len(postText) >= 500:
+            if len(postText) <= 10 or len(postText) >= 400:
                 return "failed !"
-            # check if text is already posted
-            textFile = open(f"text{argv[1]}.txt", '+r')
-            txtFile = textFile.read()
-            textFile.close()
-            if postText == txtFile:
-                return "failed !"
-            textFile = open(f"text{argv[1]}.txt", '+w')
-            textFile.write(postText)
-            textFile.close()
             # Filter Text for last time
             for character in postText:
                 if character == '@':
