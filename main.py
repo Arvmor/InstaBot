@@ -368,7 +368,7 @@ noneMobileChrome.add_argument("--log-level=OFF")
 while True:
     if runtimehour == TotalRunTime:
         runtimehour = 0
-        sleep(choice(range(50000, 50800)))
+        sleep(57600)
     while True:
         try:
             # Create Image for post
@@ -418,7 +418,7 @@ while True:
                 break
             print(f"All done ! {runtimehour}/{TotalRunTime}")
             # here you can set the delay time
-            sleep(choice(range(3400, 3800)))
+            sleep(choice(range(7100, 7300)))
             posted = False
             followed = False
             storied = False
