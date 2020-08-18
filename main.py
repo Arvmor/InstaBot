@@ -265,30 +265,27 @@ def storyWebsite():
     sleep(5)
     driver.find_element(
         By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/span[3]/input').send_keys(emailAddress)
-    driver.find_element(
-        By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/input[2]').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div/div[1]/div[2]/div/div/form/input[2]'))).click()
     sleep(5)
     # Sign up
     driver.execute_script("window.open('');")
     driver.switch_to.window(driver.window_handles[1])
     driver.get("https://app.storrito.com/#/login")
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div[2]/button').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div[2]/button'))).click()
     sleep(1)
     driver.find_element(
         By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/div/input').send_keys(f"{emailAddress}@moakt.cc")
-    sleep(5)
-    driver.find_element(
-        By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/button').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div[1]/div/div[3]/div/div[1]/button'))).click()
     sleep(30)
     # Get verify link
     driver.switch_to.window(driver.window_handles[0])
-    sleep(2)
-    driver.find_element(
-        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[1]/a[2]').click()
-    sleep(2)
-    driver.find_element(
-        By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a').click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[1]/a[2]'))).click()
+    WebDriverWait(driver, 20).until(EC.element_to_be_clickable(
+        (By.XPATH, '/html/body/div/div[1]/div[2]/div/div[2]/div[2]/div/table/tbody/tr[2]/td[1]/a'))).click()
     sleep(2)
     driver.switch_to.frame(
         driver.find_element(
